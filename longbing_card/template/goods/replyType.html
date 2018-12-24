@@ -1,0 +1,322 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            话术分类列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+
+            <button class="layui-btn" data-toggle="modal" data-target="#addItem">
+                <i class="layui-icon">&#xe608;</i> 添加
+            </button>
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only"></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputSearch" placeholder="请输入搜索内容" value="{$keyword}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-search">搜索</button>
+            </form>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>分类名</th>
+                <th>创建时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $reply $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['title']}</td>
+                <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                <td>
+                    {if $item['status'] == 1}
+                    <span class="layui-badge layui-bg-blue">启用</span>
+                    {else}
+                    <span class="layui-badge">禁用</span>
+                    {/if}
+                </td>
+                <td>
+                    {if $item['status'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-warm btn-disable-item"
+                            itemId="{$item['id']}">
+                        禁用
+                    </button>
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-enable-item"
+                            itemId="{$item['id']}">
+                        启用
+                    </button>
+                    {/if}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-delete-item"
+                            itemId="{$item['id']}">
+                        删除
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs btn-edit-item"
+                            itemId="{$item['id']}" itemTop="{$item['top']}" itemContent="{$item['title']}" data-toggle="modal" data-target="#editItem">
+                        编辑
+                    </button>
+
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+        <div id="dataTable"></div>
+    </div>
+</div>
+
+
+<!-- 模态框（Modal）新增 -->
+<div class="modal fade" id="addItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">新增话术分类</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">分类名</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputItemName" placeholder="分类名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序值(倒序, 值越大越靠前)</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="inputItemTop" placeholder="">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary btn-add-item">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal）编辑职位 -->
+<div class="modal fade" id="editItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">编辑话术分类</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">话术分类</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputEditContent" placeholder="话术分类">
+                            <input type="hidden" class="form-control" id="inputItemId">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序值(倒序, 值越大越靠前)</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="inputEditTop" placeholder="">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary btn-edit-reply-sub">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'form', 'laypage'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            , layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('replyType')}" + "&page=" + obj.curr + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  新增职位
+    $('.btn-add-item').click(function () {
+        var itemName = $('#inputItemName').val();
+        var top = $('#inputItemTop').val();
+        if (!itemName)
+            return false;
+        layer.load();
+        var url = "{php echo $this->createWebUrl('replyType')}";
+        var data = {
+            action: 'add',
+            content: itemName,
+            top: top,
+        };
+
+        postData(url, data);
+    });
+
+    //  禁用职位
+    $('.btn-disable-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取参数失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否禁用该内容?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('replyType')}";
+                var data = {
+                    action: 'disable',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  启用职位
+    $('.btn-enable-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取参数失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否启用该内容?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('replyType')}";
+                var data = {
+                    action: 'enable',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  删除职位
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取参数失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否删除该内容?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('replyType')}";
+                var data = {
+                    action: 'delete',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  编辑职位
+    $('.btn-edit-item').click(function () {
+        var id = $(this).attr('itemId');
+        var itemTop = $(this).attr('itemTop');
+        var content = $(this).attr('itemContent');
+        if (!id || !content) {
+            layer.msg('获取信息失败!');
+            return false;
+        }
+        $('#inputEditContent').val(content);
+        $('#inputEditTop').val(itemTop);
+        $('#inputItemId').val(id);
+    });
+    $('.btn-edit-reply-sub').click(function () {
+        var id = $('#inputItemId').val();
+        var content = $('#inputEditContent').val();
+        var top = $('#inputEditTop').val();
+        if (!id) {
+            layer.msg('获取信息失败!');
+            return false;
+        }
+        if (!content) {
+            layer.msg('请输入快捷回复内容!');
+            return false;
+        }
+        var url = "{php echo $this->createWebUrl('replyType')}";
+        var data = {
+            action: 'edit',
+            id: id,
+            content: content,
+            top: top,
+        };
+
+        postData(url, data);
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('replyType')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('replyType')}" + "&keyword=" + keyword;
+        return false;
+    })
+
+</script>

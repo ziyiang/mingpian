@@ -1,0 +1,133 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            公司信息管理
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input" value="{$company['name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司简称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="short_name" required  lay-verify="required" placeholder="请输入公司简称" autocomplete="off" class="layui-input" value="{$company['short_name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addr" required  lay-verify="required" placeholder="请输入公司地址" autocomplete="off" class="layui-input" value="{$company['addr']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司logo</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_image('logo', $company['logo']);}
+                    <div class="alert alert-success" role="alert">图片建议尺寸: 133 * 133</div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司网址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url" required  lay-verify="required" placeholder="请输入公司网址" autocomplete="off" class="layui-input" value="{$company['url']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系方式(多个联系方式用空格分开)</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" required  lay-verify="required" placeholder="请输入联系方式" autocomplete="off" class="layui-input" value="{$company['phone']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商城背景图</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_image('desc', $company['desc']);}
+                    <div class="alert alert-success" role="alert">图片建议尺寸: 750 * 423</div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">官网轮播图</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_multi_image('culture', $company['culture']);}
+                    <div class="alert alert-success" role="alert">图片建议尺寸: 750 * 400</div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司纬度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="latitude" required  lay-verify="required" placeholder="请输入公司地址纬度" autocomplete="off" class="layui-input" value="{$company['latitude']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司经度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="longitude" required  lay-verify="required" placeholder="请输入公司地址经度" autocomplete="off" class="layui-input" value="{$company['longitude']}">
+                </div>
+            </div>
+
+            <a href="http://lbs.qq.com/tool/getpoint/index.html" target="_blank">
+                <div class="alert alert-success" role="alert">
+                    点击获取经纬度: http://lbs.qq.com/tool/getpoint/index.html
+                </div>
+            </a>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formCompany">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form
+
+        form.on('submit(formCompany)', function(data){
+            var formData = data.field;
+
+            var url = "{php echo $this->createWebUrl('company')}";
+
+            var data = {
+                action: 'editCompany',
+                id: '{$id}',
+                formData: formData
+            };
+
+            postData(url, data);
+
+            return false;
+        });
+    });
+
+</script>

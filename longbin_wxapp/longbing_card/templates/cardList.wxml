@@ -1,0 +1,52 @@
+<block wx:if="{{globalData.configInfo.config.allow_create==1}}">
+    <view class="create-card-title" wx:if="{{collectStatus==false}}">暂无名片请创建</view>
+    <view bindtap="toJump" class="card-toAdd-sec tc fix" data-status="toAddCard" wx:if="{{collectionList.list.length>0}}">
+        <i class="iconfont icon-open" style="color:black;"></i>
+        <view class="title" style="font-weight:bold;color:black;">{{globalData.configInfo.config.create_text}}</view>
+    </view>
+    <view bindtap="toJump" class="card-toAdd-sec tc big-toAdd-card br-15}}" data-status="toAddCard" wx:if="{{collectStatus==false}}">
+        <i class="iconfont icon-open"></i>
+        <view class="title">{{globalData.configInfo.config.create_text}}</view>
+    </view>
+    <view style="height:86rpx;" wx:if="{{collectionList.list.length>0}}"></view>
+</block>
+<view class="card-list-sec" wx:if="{{collectionList.list.length>0}}">
+    <view bindtap="toJump" class="child rel" data-index="{{index}}" data-status="toCardIndex" wx:for="{{collectionList.list}}" wx:key="key">
+        <view class="title">
+                {{item.create_time2}}
+                <block wx:if="{{item.shareBy}}">来自{{item.shareBy}}</block>
+        </view>
+        <view class="card br-15 clearfix">
+            <view class="content fl rel">
+                <view class="company ellipsis">
+                        {{item.userInfo.myCompany.name?item.userInfo.myCompany.name:'暂未填写'}}
+                    </view>
+                <view class="name ellipsis">
+                        {{item.userInfo.name?item.userInfo.name:'暂未填写'}}
+                    </view>
+                <view class="job ellipsis">
+                        {{item.userInfo.job_name?item.userInfo.job_name:'暂未填写'}}
+                    </view>
+                <view class="contact ellipsis">
+                        {{item.userInfo.phone?item.userInfo.phone:'暂未填写'}}
+                    </view>
+                <view class="contact ellipsis">
+                        {{item.userInfo.email?item.userInfo.email:'暂未填写'}}
+                    </view>
+                <view class="desc ellipsis">No.{{index*1+1}}</view>
+            </view>
+            <view class="user-img fr rel">
+                <image class="br-13 fr" mode="aspectFill" src="{{item.userInfo.avatar?item.userInfo.avatar:globalData.defaultUserImg}}"></image>
+                <em class="tc {{item.message>100?'dotbig':'dot'}}" wx:if="{{item.message>0}}">
+                        {{item.message}}
+                    </em>
+            </view>
+        </view>
+        <view class="more abs">
+            <em class="circle"></em>
+            <em class="circle big-dot"></em>
+            <em class="circle"></em>
+        </view>
+    </view>
+    <include src="/longbing_card/templates/loading.wxml" wx:if="{{show}}"></include>
+</view>

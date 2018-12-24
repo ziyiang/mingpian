@@ -1,0 +1,258 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            商品列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+
+            <button class="layui-btn btn-add-goods">
+                <i class="layui-icon">&#xe608;</i> 添加
+            </button>
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only"></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputSearch" placeholder="请输入搜索内容" value="{$keyword}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-search">搜索</button>
+            </form>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>商品名</th>
+                <th>封面图</th>
+                <th>价格</th>
+                <th>销量</th>
+                <th>状态</th>
+                <th>所属分类</th>
+                <th>创建时间</th>
+                <th style="width: 260px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $goods $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['name']}</td>
+                <td>
+                    <img src="{$item['trueCover']}" alt="">
+                </td>
+                <td>{$item['price']}</td>
+                <td>{$item['sale_count']}</td>
+                <td>
+                    {if $item['status'] == 1}
+                    <span class="layui-badge layui-bg-blue">上架中</span>
+                    {else}
+                    <span class="layui-badge">已下架</span>
+                    {/if}
+                </td>
+                <td>{$item['title']}</td>
+                <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                <td>
+                    {if $item['status'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-down-goods"
+                            goodsId="{$item['id']}">
+                        下架
+                    </button>
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs btn-on-goods"
+                            goodsId="{$item['id']}">
+                        上架
+                    </button>
+                    {/if}
+                    <button type="button" class="layui-btn layui-btn-xs btn-edit-goods"
+                            goodsId="{$item['id']}">
+                        编辑
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary btn-delete-item"
+                            goodsId="{$item['id']}">
+                        删除
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-edit-spe"
+                            goodsId="{$item['id']}">
+                        规格
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-warm btn-edit-collage"
+                            goodsId="{$item['id']}">
+                        拼团
+                    </button>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+        <div id="dataTable"></div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'form', 'laypage'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            , layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('goods')}" + "&page=" + obj.curr + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('goods')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('goods')}" + "&keyword=" + keyword;
+        return false;
+    });
+
+    //  下架商品
+    $('.btn-down-goods').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否下架该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('goods')}";
+                var data = {
+                    action: 'downGoods',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  上架商品
+    $('.btn-on-goods').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否上架该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('goods')}";
+                var data = {
+                    action: 'upGoods',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  删除
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        var url = "{php echo $this->createWebUrl('goods')}" + "&action=delete&id=" + id;
+        layer.open({
+            content: '是否删除该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('goods')}";
+                var data = {
+                    action: 'delete',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  新增商品
+    $('.btn-add-goods').click(function () {
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editGoods')}";
+        window.location.href = url;
+    });
+
+    //  编辑商品
+    $('.btn-edit-goods').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editGoods')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+    //  编辑商品规格
+    $('.btn-edit-spe').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editSpe')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+    //  编辑商品平团条件
+    $('.btn-edit-collage').click(function () {
+        var id = $(this).attr('goodsId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editCollage')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+</script>

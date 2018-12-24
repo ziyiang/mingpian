@@ -1,0 +1,41 @@
+{template 'common/header'}
+
+
+
+<a href="https://www.kancloud.cn/jingshuixian66/longbing_card/764002" target="_blank">
+    <div class="alert alert-success" role="alert">
+        启动前端口开放等配置文档: https://www.kancloud.cn/jingshuixian66/longbing_card/764002
+    </div>
+</a>
+
+{template 'common/footer'}
+
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    //  启动
+    $('.IMStart').click(function () {
+        var url = "{php echo $this->createWebUrl('workerman')}" + "&sign=start";
+        window.location.href = url;
+    });
+    //  停止
+    $('.IMStop').click(function () {
+        var url = "{php echo $this->createWebUrl('workerman')}" + "&sign=stop";
+        window.location.href = url;
+    });
+    //  重启
+    $('.IMRestart').click(function () {
+        var url = "{php echo $this->createWebUrl('workerman')}" + "&sign=restart";
+        window.location.href = url;
+    });
+
+    //  状态
+    $('.IMStatus').click(function () {
+        var url = "{php echo $this->createWebUrl('workerman')}" + "&sign=status";
+        window.location.href = url;
+    });
+</script>

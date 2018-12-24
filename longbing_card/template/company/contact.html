@@ -1,0 +1,160 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {$infoM['name']}管理
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <input type="hidden" name="table_name" value="{$infoM['table_name']}">
+            <input type="hidden" name="modular_id" value="{$id}">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">1联系人称呼</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name1" required  lay-verify="required" placeholder="请输入联系人称呼" autocomplete="off" class="layui-input" value="{$info['name1']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">1联系人号码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone1" required  lay-verify="required" placeholder="请输入联系人号码" autocomplete="off" class="layui-input" value="{$info['phone1']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">2联系人称呼</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name2" required placeholder="请输入联系人称呼" autocomplete="off" class="layui-input" value="{$info['name2']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">2联系人号码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone2" required placeholder="请输入联系人号码" autocomplete="off" class="layui-input" value="{$info['phone2']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">3联系人称呼</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name3" required placeholder="请输入联系人称呼" autocomplete="off" class="layui-input" value="{$info['name3']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">3联系人号码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone3" required placeholder="请输入联系人号码" autocomplete="off" class="layui-input" value="{$info['phone3']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" required  lay-verify="required" placeholder="请输入公司地址" autocomplete="off" class="layui-input" value="{$info['address']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址纬度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="latitude" required  lay-verify="required" placeholder="请输入公司地址纬度" autocomplete="off" class="layui-input" value="{$info['latitude']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址经度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="longitude" required  lay-verify="required" placeholder="请输入公司地址经度" autocomplete="off" class="layui-input" value="{$info['longitude']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示导航</label>
+                <div class="layui-input-block">
+                    {if $info['show_map'] == 0}
+                    <input type="radio" name="show_map" value="0" title="不显示" checked>
+                    <input type="radio" name="show_map" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show_map" value="0" title="不显示">
+                    <input type="radio" name="show_map" value="1" title="显示" checked>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">详情是否显示导航</label>
+                <div class="layui-input-block">
+                    {if $info['show_map_desc'] == 0}
+                    <input type="radio" name="show_map_desc" value="0" title="不显示" checked>
+                    <input type="radio" name="show_map_desc" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show_map_desc" value="0" title="不显示">
+                    <input type="radio" name="show_map_desc" value="1" title="显示" checked>
+                    {/if}
+                </div>
+            </div>
+
+            <a href="http://lbs.qq.com/tool/getpoint/index.html" target="_blank">
+                <div class="alert alert-success" role="alert">
+                    点击获取经纬度: http://lbs.qq.com/tool/getpoint/index.html
+                </div>
+            </a>
+
+            <div class="alert alert-info" role="alert">
+                至少需要填入一个联系方式
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form
+
+        form.on('submit(formSub)', function(data){
+            var formData = data.field;
+
+            var url = "{php echo $this->createWebUrl('modular')}";
+
+            var id = "{$info['id']}";
+
+            if (id) {
+                formData.id = id;
+            }
+
+            var data = {
+                action: 'manageSub',
+                formData: formData
+            };
+
+            postData(url, data);
+
+            return false;
+        });
+    });
+
+</script>

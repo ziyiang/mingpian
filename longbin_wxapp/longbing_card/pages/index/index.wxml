@@ -1,0 +1,101 @@
+<import src="../../templates/auth/auth.wxml"></import>
+<import src="../../templates/voucher/voucher.wxml"></import>
+<import src="../../templates/copyright/copyright.wxml"></import>
+<import src="../../templates/cardType.wxml"></import>
+<import src="../../templates/companyTmp.wxml"></import>
+<import src="../../templates/loading/loading.wxml"></import>
+<include src="/longbing_card/templates/cardList.wxml" wx:if="{{currentTabBar=='cardList'}}"></include>
+<view bindtap="ddd" class="animatoins {{globalData.clientUnreadImg==true?'aa':''}} br-10" wx:if="{{currentTabBar!='cardList'}}">
+    <image class="br-5" src="{{cardIndexData.info.avatar}}"></image>
+    <view class="animatoins_top rel">
+        <text class="ellipsis">{{cardIndexData.info.job_name}}{{cardIndexData.info.name}}</text>
+        <text class="animatoins_content">给你发了一条新的消息</text>
+        <em class="dot">1</em>
+    </view>
+</view>
+<block wx:if="{{currentTabBar=='toCard'}}">
+    <template is="{{cardIndexData.info.card_type?cardIndexData.info.card_type:'cardType1'}}" data="{{tmpCardData:tmpCardData}}" wx:if="{{cardIndexData.user_id}}"></template>
+    <include src="/longbing_card/templates/toCard.wxml"></include>
+</block>
+<block wx:if="{{currentTabBar=='toShop'}}">
+    <include src="/longbing_card/templates/toShop.wxml"></include>
+    <template is="loading" data="{{...shop_all,loading:loadingShop}}"></template>
+</block>
+<block wx:if="{{currentTabBar=='toNews'}}">
+    <include src="/longbing_card/templates/toNews.wxml"></include>
+    <template is="loading" data="{{...newsList,loading:loadingNews}}"></template>
+</block>
+<block wx:if="{{currentTabBar=='toCompany'&&company_company}}">
+    <view class="company-swiper rel">
+        <swiper autoplay="{{swiperStatus.autoplay}}" bindchange="swiperChange" duration="1000" indicatorDots="{{swiperStatus.indicatorDots}}" interval="3000">
+            <swiper-item wx:for="{{company_company.culture}}" wx:key="key">
+                <image bindtap="toImgUrl" class="slide-image" data-url="{{item.target}}" mode="aspectFill" src="{{item}}"></image>
+            </swiper-item>
+        </swiper>
+        <view class="swiper-dots">
+            <view class="circle {{index==swiperIndexCur?'active':''}}" wx:for="{{company_company.culture.length}}" wx:key="unique"></view>
+        </view>
+    </view>
+    <form bindsubmit="formSubmit" class="copany-nav-sec tc clearfix" reportSubmit="true" wx:if="{{company_modular.length>0}}">
+        <block wx:if="{{item.show_top==1}}" wx:for="{{company_modular}}" wx:key="key">
+            <button class="fl" data-index="{{index}}" data-status="toNav" data-url="/longbing_card/pages/company/list/list?identification={{item.id}}&type={{item.type}}&name={{item.name}}&table_name={{item.table_name}}" formType="submit" hoverClass="none" wx:if="{{item.type==1||item.type==3||item.type==5||item.type==7}}">
+                <image mode="aspectFill" src="{{item.cover}}"></image>
+                <view class="title">{{item.name}}</view>
+            </button>
+            <button class="fl" data-index="{{index}}" data-status="toNav" data-url="/longbing_card/pages/company/detail/detail?table_name={{item.table_name}}&type=2&id={{item.info.id}}&name={{item.name}}" formType="submit" hoverClass="none" wx:if="{{item.type==2}}">
+                <image mode="aspectFill" src="{{item.cover}}"></image>
+                <view class="title">{{item.name}}</view>
+            </button>
+            <button class="fl" data-index="{{index}}" data-status="toNav" data-url="/longbing_card/pages/company/contact/contact?identification={{item.id}}&type=4&name={{item.name}}" formType="submit" hoverClass="none" wx:if="{{item.type==4}}">
+                <image mode="aspectFill" src="{{item.cover}}"></image>
+                <view class="title">{{item.name}}</view>
+            </button>
+            <button class="fl" data-index="{{index}}" data-status="toNav" data-url="tel:{{item.list[0].phone}}" formType="submit" hoverClass="none" wx:if="{{item.type==6}}">
+                <image mode="aspectFill" src="{{item.cover}}"></image>
+                <view class="title">{{item.name}}</view>
+            </button>
+        </block>
+    </form>
+    <view wx:if="{{company_modular.length>0}}">
+        <block wx:if="{{item.type!=6&&item.show==1}}" wx:for="{{company_modular}}" wx:key="key">
+            <view class="company-common-title" wx:if="{{item.show_name==1||item.show_more==1}}">{{item.show_name==1?item.name:''}}
+                <block wx:if="{{item.show_more==1}}">
+                    <view bindtap="toJump" class="fr" data-index="{{index}}" data-status="toMoreDetail" data-url="/longbing_card/pages/company/list/list?identification={{item.id}}&type={{item.type}}&name={{item.name}}&table_name={{item.table_name}}" wx:if="{{item.type==1||item.type==3||item.type==5||item.type==7}}">查看更多<i class="iconfont icon-right"></i>
+                    </view>
+                    <view bindtap="toJump" class="fr" data-index="{{index}}" data-status="toMoreDetail" data-url="/longbing_card/pages/company/detail/detail?table_name={{item.table_name}}&type=2&id={{item.info.id}}&name={{item.name}}" wx:if="{{item.type==2}}">查看更多<i class="iconfont icon-right"></i>
+                    </view>
+                    <view bindtap="toJump" class="fr" data-index="{{index}}" data-status="toMoreDetail" data-url="/longbing_card/pages/company/contact/contact?identification={{item.id}}&type=4&name={{item.name}}" wx:if="{{item.type==4}}">查看更多<i class="iconfont icon-right"></i>
+                    </view>
+                </block>
+            </view>
+            <view style="background:white;{{item.show_name==0&&item.show_more==0?'margin-top:12rpx;padding-top:30rpx;':item.show_name==0||item.show_more==0?'margin-top:0rpx':'margin-top:0rpx'}}">
+                <template is="companyTmp1" data="{{item:item,index:index}}" wx:if="{{item.type==1}}"></template>
+                <view class="company-introduce-sec" wx:if="{{item.type==2}}">
+                    <htmltowxml bindWxmlTagATap="wxmlTagATap" json="{{item.info.introduction}}" showLoading="{{false}}"></htmltowxml>
+                </view>
+                <template is="companyTmp3" data="{{item:item,index:index}}" wx:if="{{item.type==3}}"></template>
+                <template is="companyTmp4" data="{{item:item,index:index}}" wx:if="{{item.type==4}}"></template>
+                <map showLocation bindcontroltap="controltap" bindmarkertap="markertap" bindregionchange="regionchange" controls="{{controls}}" id="map" latitude="{{item.info.latitude}}" longitude="{{item.info.longitude}}" markers="{{item.info.markers}}" polyline="{{polyline}}" scale="18" style="width: 100%; height: 300px;" wx:if="{{item.type==4&&item.info.show_map==1}}"></map>
+                <template is="companyTmp5" data="{{item:item,index:index}}" wx:if="{{item.type==5}}"></template>
+                <template is="companyTmp7" data="{{item:item,index:index,companyVideoImg:globalData.companyVideoImg,playVideoImg:globalData.playVideoImg}}" wx:if="{{item.type==7}}"></template>
+            </view>
+        </block>
+    </view>
+</block>
+<block wx:if="{{currentTabBar!='cardList'}}">
+    <block wx:if="{{globalData.isStaff==false}}">
+        <view bindtap="toJump" class="fixed-message-sec fix tc circle" data-status="toConsult" wx:if="{{globalData.hasClientPhone==true}}">
+            <i class="iconfont icon-fabuxuqiu rel"></i>
+            <view class="rel">咨询</view>
+            <em class="tc {{clientUnread>100?'dotbig':'dot'}}" wx:if="{{clientUnread>0}}">{{clientUnread}}</em>
+        </view>
+        <button bindgetphonenumber="getPhoneNumber" class="fixed-message-sec fix tc circle" data-status="toConsult" formType="submit" openType="getPhoneNumber" style="line-height:initial;width:114rpx;hegiht:114rpx;" wx:if="{{globalData.hasClientPhone==false}}">
+            <i class="iconfont icon-fabuxuqiu rel"></i>
+            <view class="abs tc" style="width:100%;left:0rpx;padding-top:44rpx;line-height:initial;height:30rpx;">咨询</view>
+            <em class="tc {{clientUnread>100?'dotbig':'dot'}}" wx:if="{{clientUnread>0}}">{{clientUnread}}</em>
+        </button>
+    </block>
+</block>
+<template is="auth" data="{{authStatus:authStatus,globalData:globalData}}"></template>
+<template is="copyright" data="{{globalData:globalData}}"></template>
+<include src="/longbing_card/templates/tabBar.wxml" wx:if="{{showTabBar}}"></include>

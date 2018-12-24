@@ -1,0 +1,8 @@
+<form bindsubmit="formSubmit" class="setTab-box-view" reportSubmit="true">
+    <view class="swiper-tab">
+        <button class="swiper-tab-list {{currentIndex==index?'active':''}}" data-index="{{index}}" data-status="{{item.status}}" formType="submit" hoverClass="none" wx:for="{{tabList}}" wx:key="index">
+      {{item.name?item.name:item}}
+      <view class=" {{item.dotNum>=100?'dotbig':'dot'}}" wx:if="{{item.dotNum>0}}">{{item.dotNum}}</view>
+        </button>
+    </view>
+</form>

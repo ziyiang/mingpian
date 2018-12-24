@@ -1,0 +1,19 @@
+<import src="../../../templates/copyright/copyright.wxml"></import>
+<view class="spread-product-sec card-product-sec" wx:if="{{dataList.length>0}}">
+    <view class="child rel" wx:for="{{dataList}}" wx:key="key">
+        <image bindtap="toJump" class="abs br-5" data-id="{{item.id}}" data-status="toShopDetail" mode="aspectFill" src="{{item.cover}}"></image>
+        <view class="content">
+            <view bindtap="toJump" class="title clamp2" data-id="{{item.id}}" data-status="toShopDetail">{{item.name}}</view>
+            <view class="flex">
+                <view class="flex100-4">¥{{item.price==0?'面议':item.price}}</view>
+                <form bindsubmit="formSubmit" class="flex100-6 tr" reportSubmit="true">
+                    <button class="fr share ml-20" data-index="{{index}}" data-status="toShare" formType="submit" hoverClass="none" openType="share">转发</button>
+                    <button class="fr {{item.is_extension==0?'push':'allPush'}}" data-index="{{index}}" data-status="toPush" formType="submit" hoverClass="none">{{item.is_extension==0?'设为主推':'取消主推'}}</button>
+                </form>
+            </view>
+        </view>
+    </view>
+</view>
+<include src="/longbing_card/templates/loading.wxml" wx:if="{{show}}"></include>
+<template is="copyright" data="{{globalData:globalData}}"></template>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}"></view>

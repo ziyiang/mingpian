@@ -1,0 +1,124 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            公司动态编辑
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" value="{$info['title']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面图</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_multi_image('cover', $info['cover']);}
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">内部链接</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select name="content2" lay-verify="required" lay-search>-->
+                        <!--{loop $pages $item}-->
+                        <!--{if $item['page'] == $info['content']}-->
+                        <!--<option value="{$item['page']}" selected>{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{else}-->
+                        <!--<option value="{$item['page']}">{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{/if}-->
+                        <!--{/loop}-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">外部链接</label>
+                <div class="layui-input-block">
+                    {if $info['type'] == 1}
+                    <input type="text" name="content" required lay-verify="required" placeholder="请输入外部链接" autocomplete="off" class="layui-input" value="">
+                    {else}
+                    <input type="text" name="content" required lay-verify="required" placeholder="请输入外部链接" autocomplete="off" class="layui-input" value="{$info['content']}">
+                    {/if}
+                    <!--<div class="alert alert-success" role="alert">填写了外部链接后内部链接将失效</div>-->
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序值(值越大, 排序越靠前)</label>
+                <div class="layui-input-block">
+                    <input type="number" min="0" name="top" required  lay-verify="required" placeholder="请输入排序值" autocomplete="off" class="layui-input" value="{$info['top']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">发布时间</label>
+                <div class="layui-input-block">
+                    <input name="create_time" id="create_time" autocomplete="off" class="layui-input" value="{$info['create_time']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button  class="layui-btn layui-btn-primary" onclick="javascript: history.back()">返回</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+<script>
+    $(function () {
+        layui.use(['layer', 'form', 'laydate'], function () {
+            var layer = layui.layer
+                , form = layui.form
+                , laydate = layui.laydate
+
+            form.on('submit(formSub)', function(data){
+                var formData = data.field;
+                layer.load();
+
+                if (formData.cover == '') {
+                    layer.msg('请选择头像');
+                    return false;
+                }
+
+                var url = "{php echo $this->createWebUrl('timeline')}";
+
+                var id = '{$id}';
+                var data = {
+                    action: 'editSubUrl',
+                    formData: formData
+                };
+                if (id > 0) {
+                    data.id = id;
+                }
+
+                postData(url, data);
+
+                return false;
+            });
+
+            laydate.render({
+                elem: '#create_time'
+                ,type: 'datetime'
+            });
+        });
+    })
+</script>

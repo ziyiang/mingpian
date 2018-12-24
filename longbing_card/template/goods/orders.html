@@ -1,0 +1,182 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            订单列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <label class="sr-only">订单状态</label>
+                    <div class="input-group">
+                        <select name="status" lay-verify="required" style="width: 200px" id="status">
+                            {loop $statusArr $index $item}
+
+                            {if $type == $index}
+                            <option value="{$index}" selected>{$item}</option>
+                            {else}
+                            <option value="{$index}">{$item}</option>
+                            {/if}
+
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-search">查找</button>
+            </form>
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>商品名</th>
+                <th>用户id</th>
+                <th>总金额</th>
+                <th>收货地址</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['names']}</td>
+                <td>{$item['user_id']}</td>
+                <td>{$item['total_price']}</td>
+                <td>{$item['name']} {$item['phone']} {$item['address']} {$item['address_detail']}</td>
+                <td>
+                    {if $item['pay_status'] == 0}
+                    <span class="layui-badge">未支付</span>
+                    {elseif $item['pay_status'] == 1}
+
+                        {if $item['order_status'] == 0}
+                        <span class="layui-badge layui-bg-orange">未发货</span>
+                        {elseif $item['order_status'] == 2}
+                        <span class="layui-badge layui-bg-green">已发货</span>
+                        {elseif $item['order_status'] == 3}
+                        <span class="layui-badge layui-bg-blue">已完成</span>
+                        {elseif $item['order_status'] == 4}
+                        {else}
+                        {/if}
+
+                    {else}
+
+                    {/if}
+                </td>
+                <td>
+                    {if $item['pay_status'] == 1}
+                    {if $item['order_status'] == 0}
+                    <button type="button" class="layui-btn layui-btn-xs btn-send-item"
+                    itemId="{$item['id']}" data-toggle="modal" data-target="#myModal">
+                    发货
+                    </button>
+                    {/if}
+                    {/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">填写发货信息</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="itemId">
+                    <div class="form-group">
+                        <label>请输入快递单号</label>
+                        <input type="text" class="form-control" name="courier_number">
+                    </div>
+                    <div class="form-group">
+                        <label>请输入快递公司</label>
+                        <input type="text" class="form-control" name="express_company">
+                    </div>
+                    <div class="form-group">
+                        <label>请输入快递查询电话</label>
+                        <input type="text" class="form-control" name="express_phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary btn-send-sub">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+    });
+
+    //  点击发货
+    $('.btn-send-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取信息失败!');
+            return false;
+        }
+        $("input[name='itemId']").val(id);
+    });
+    //  提交编辑
+    $('.btn-send-sub').click(function () {
+        console.log('in');
+        var itemId = $("input[name='itemId']").val();
+        var courierNumber = $("input[name='courier_number']").val();
+        var expressCompany = $("input[name='express_company']").val();
+        var expressPhone = $("input[name='express_phone']").val();
+
+        var url = "{php echo $this->createWebUrl('orders')}";
+        var data = {
+            action: 'send',
+            itemId: itemId,
+            courierNumber: courierNumber,
+            expressCompany: expressCompany,
+            expressPhone: expressPhone,
+        };
+
+        console.log('data:', data);
+
+        postData(url, data);
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var status = $('#status').val();
+
+        if (!status) {
+            window.location.href = "{php echo $this->createWebUrl('orders')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('orders')}" + "&type=" + status;
+        return false;
+    })
+
+</script>

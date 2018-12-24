@@ -1,0 +1,350 @@
+
+<script src="/addons/longbing_card/images/js/echarts.js"></script>
+{template 'common/header'}
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this" type="1">今日数据</li>
+        <li type="2">近7天数据</li>
+        <li type="3">近30天数据</li>
+        <li type="4">本月数据</li>
+        <li type="5">自定义统计</li>
+    </ul>
+    <div class="layui-tab-content" style="height: auto">
+        {if $type == 5}
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <!--<label class="layui-form-label">日期范围</label>-->
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="startDate" id="startData" class="layui-input" placeholder="请选择开始日期" value="{$sDate}">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="endDate" id="endData" class="layui-input" placeholder="请选择结束日期" value="{$eDate}">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">请选择日期范围</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                </div>
+            </div>
+
+        </div>
+        {/if}
+        <div class="layui-tab-item layui-show" style="height: auto; margin: 0;">
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+            <div id="main" style="width: 800px;height:400px;">
+
+            </div>
+            <div id="turnoverRate" style="width: 800px;height:400px;">
+
+            </div>
+            <div id="developingCustomers" style="width: 800px;height:400px;">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+<!--<script src="/addons/longbing_card/images/js/echarts.min.js"></script>-->
+
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+    layui.use('layer', function(){
+        var layer = layui.layer;
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#startData' //指定元素
+        });
+        laydate.render({
+            elem: '#endData' //指定元素
+        });
+    });
+
+    $('.layui-tab-title li').click(function () {
+        layer.load();
+        var type = $(this).attr('type');
+        var url = "{php echo $this->createWebUrl('ai')}" + "&type=" + type;
+        window.location.href = url;
+    });
+    $('.layui-tab-title li').removeClass('layui-this');
+    var type = '{$type}' * 1 - 1;
+    $($('.layui-tab-title li')[type]).addClass('layui-this');
+
+    $('.layui-btn').click(function () {
+        var startDate = $("input[name='startDate']").val();
+        var endDate = $("input[name='endDate']").val();
+        var url = "{php echo $this->createWebUrl('ai')}" + "&type=" + 5 + "&startDate=" + startDate + "&endDate=" + endDate;
+        window.location.href = url;
+    });
+</script>
+
+<script type="text/javascript">
+    var data = '{$data}';
+    data = JSON.parse(data);
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '名片统计'
+        },
+        tooltip: {},
+        legend: {
+            data:['次数']
+        },
+        xAxis: {
+            data: ["浏览名片次数", "点赞名片次数", "点赞语音次数", "分享名片次数"]
+        },
+        yAxis: {},
+        series: [{
+            name: '次数',
+            type: 'bar',
+            data: ["{$view_count}", "{$thumbs_count}", "{$voice_count}", "{$share_count}"]
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+
+
+    //  成交率漏斗图
+    var turnoverRateChart = echarts.init(document.getElementById('turnoverRate'), 'dark');
+    var turnoverRate = {
+        title: {
+            text: '成交率',
+            subtext: '漏斗图'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c}"
+        },
+        toolbox: {
+            feature: {
+                dataView: {readOnly: false},
+                restore: {},
+                saveAsImage: {}
+            },
+        },
+        legend: {
+            data: ['总用户数','跟进数','成交数']
+        },
+        calculable: true,
+        series: [
+            {
+                name:'漏斗图',
+                type:'funnel',
+                left: '10%',
+                top: 60,
+                //x2: 80,
+                bottom: 60,
+                width: '80%',
+                // height: {totalHeight} - y - y2,
+                min: 0,
+                max: data.turnoverRate.users,
+                minSize: '20%',
+                maxSize: '70%',
+                sort: '',
+                gap: 2,
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside',
+                    },
+                    emphasis: {
+                        textStyle: {
+                            fontSize: 20
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }
+                },
+                data: [
+                    {value: data.turnoverRate.users, name: '总用户数'},
+                    {value: data.turnoverRate.follows, name: '跟进数'},
+                    {value: data.turnoverRate.deals, name: '成交数'},
+                ]
+            }
+        ]
+    };
+    turnoverRateChart.setOption(turnoverRate);
+
+    $(function () {
+
+
+        //  员工发赞客户统计
+        var url = "{php echo $this->createWebUrl('developingCustomers')}";
+
+        var data = {
+            type: '{$type}'
+        };
+        var sDate = '{$sDate}';
+        var eDate = '{$eDate}';
+        if (sDate) {
+            data.sDate = sDate
+        }
+        if (eDate) {
+            data.eDate = eDate
+        }
+
+        var names = [];
+        var numbers = [];
+
+        $.post(url, data, function (data) {
+            data = JSON.parse(data);
+            for (var i = 0; i < data.message.length; i++) {
+                names.push(data.message[i].name);
+                numbers.push(data.message[i].count);
+            }
+            console.log('names:', names);
+            console.log('numbers:', numbers);
+            console.log('responseData:', data);
+
+            var max = 0;
+            for (var i = 0; i < numbers.length; i++) {
+                if (numbers[i] > max) {
+                    max = numbers[i];
+                }
+            }
+
+            var dataAxis = names;
+            var data = numbers;
+            var yMax = max;
+            var dataShadow = [];
+
+            for (var i = 0; i < data.length; i++) {
+                dataShadow.push(yMax);
+            }
+
+            var developingCustomersChart = echarts.init(document.getElementById('developingCustomers'));
+            var developingCustomers = {
+                title: {
+                    text: '员工发展客户统计',
+                    subtext: '点击缩放, 长按鼠标可以左右拖动'
+                },
+                xAxis: {
+                    data: dataAxis,
+                    axisLabel: {
+                        inside: true,
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    z: 10
+                },
+                yAxis: {
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                dataZoom: [
+                    {
+                        type: 'inside'
+                    }
+                ],
+                series: [
+                    { // For shadow
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {color: 'rgba(0,0,0,0.05)'}
+                        },
+                        barGap:'-100%',
+                        barCategoryGap:'40%',
+                        data: dataShadow,
+                        animation: false
+                    },
+                    {
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                    [
+                                        {offset: 0, color: '#83bff6'},
+                                        {offset: 0.5, color: '#188df0'},
+                                        {offset: 1, color: '#188df0'}
+                                    ]
+                                )
+                            },
+                            emphasis: {
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                    [
+                                        {offset: 0, color: '#2378f7'},
+                                        {offset: 0.7, color: '#2378f7'},
+                                        {offset: 1, color: '#83bff6'}
+                                    ]
+                                )
+                            }
+                        },
+                        data: data
+                    }
+                ]
+            };
+
+            developingCustomersChart.setOption(developingCustomers);
+// Enable data zoom when user click bar.
+            var zoomSize = 6;
+            developingCustomersChart.on('click', function (params) {
+                console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                developingCustomersChart.dispatchAction({
+                    type: 'dataZoom',
+                    startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                    endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                });
+            });
+
+        });
+
+
+
+    })
+
+</script>

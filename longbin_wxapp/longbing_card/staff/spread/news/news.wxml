@@ -1,0 +1,37 @@
+<import src="../../../templates/copyright/copyright.wxml"></import>
+<view class="spread-news-sec" wx:if="dataList.length>0}}">
+    <view class="child rel" wx:for="{{dataList}}" wx:key="key">
+        <view bindtap="toJump" class="title clamp2" data-id="{{item.id}}" data-status="toNewsDetail">
+                {{item.title}}
+            </view>
+        <block wx:if="{{item.cover.length>0}}">
+            <view bindtap="toJump" class="imgs-sec clearfix" data-id="{{item.id}}" data-status="toNewsDetail" wx:if="{{status=='news'}}">
+                <image class="fl br-5" mode="aspectFill" src="{{item1}}" wx:if="{{index1<3}}" wx:for="{{item.cover}}" wx:for-index="index1" wx:for-item="item1" wx:key="key1"></image>
+            </view>
+        </block>
+        <view class="flex">
+            <view class="flex100-4">{{item.create_time}}</view>
+            <form bindsubmit="formSubmit" class="flex100-6 tr" reportSubmit="true">
+                <button class="fr delete ml-20" data-index="{{index}}" data-status="toDelete" formType="submit" hoverClass="none">
+                        删除
+                    </button>
+                <button class="fr share" data-id="{{item.id}}" data-index="{{index}}" data-status="toShare" formType="submit" hoverClass="none" openType="share" wx:if="{{status=='news'}}">
+                        转发
+                    </button>
+                <button class="fr share" data-index="{{index}}" data-status="toCodeDetial" formType="submit" hoverClass="none" wx:if="{{status=='code'}}">
+                        查看
+                    </button>
+            </form>
+        </view>
+    </view>
+</view>
+<include src="/longbing_card/templates/loading.wxml" wx:if="{{show}}"></include>
+<template is="copyright" data="{{globalData:globalData}}"></template>
+<view style="height:90rpx;"></view>
+<form bindsubmit="formSubmit" reportSubmit="true">
+    <button class="fix-painter-share fix tc {{globalData.isIphoneX?'isIphoneX':''}}" data-status="toAddNews" formType="submit" hoverClass="none" style="background:#e93636;height:auto;">
+        <block wx:if="{{status=='news'}}">新建动态</block>
+        <block wx:if="{{status=='code'}}">新建自定义码</block>
+    </button>
+</form>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}" style="height:100rpx;"></view>

@@ -1,0 +1,96 @@
+<form bindsubmit="formSubmit" reportSubmit="true">
+    <view class="staff-editInfo-sec">
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">来源</view>
+                <view class="flex100-8 tr">来自{{clientData.is_qr==1?'扫码':'搜索'}}</view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">姓名</view>
+                <view class="flex100-8 tr">
+                    <input name="name" placeholder="暂未填写" type="text" value="{{clientData.name?clientData.name:clientData.nickName}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">性别</view>
+                <view class="flex100-8 tr">
+                    <i class="iconfont icon-right2 fr"></i>
+                    <picker bindchange="pickerSelected" range="{{setCount}}" rangeKey="{{'name'}}" value="{{count}}">
+            {{setCount[count].name?setCount[count].name:'请选择'}}
+          </picker>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">手机号</view>
+                <view class="flex100-8 tr">
+                    <input name="phone" placeholder="暂未填写" type="text" value="{{clientData.phone}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">邮箱</view>
+                <view class="flex100-8 tr">
+                    <input name="email" placeholder="暂未填写" type="text" value="{{clientData.email}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">公司</view>
+                <view class="flex100-8 tr">
+                    <input name="company" placeholder="暂未填写" type="text" value="{{clientData.company}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">职位</view>
+                <view class="flex100-8 tr">
+                    <input name="position" placeholder="暂未填写" type="text" value="{{clientData.position}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">详细地址</view>
+                <view class="flex100-8 tr">
+                    <input name="address" placeholder="暂未填写" type="text" value="{{clientData.address}}"></input>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2">生日</view>
+                <view class="flex100-8 tr">
+                    <i class="iconfont icon-right2 fr"></i>
+                    <picker bindchange="listenerDatePickerSelected" mode="date" value="{{date}}">
+            {{date?date:'请选择'}}
+          </picker>
+                </view>
+            </view>
+        </view>
+        <view class="child">
+            <view class="flex">
+                <view class="flex100-2" style="flex:0 0 50%;">屏蔽Ta的消息推送</view>
+                <view class="flex100-8 tr" style="flex:0 0 50%;">
+                    <switch bindchange="switchChange" checked="{{clientData.is_mask==1?'checked':''}}" name="is_mask" style="zoom:0.7"></switch>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="staff-editInfo-common">
+        <view class="title">备注</view>
+        <textarea class="br-15" maxlength="-1" name="remark" placeholder="备注" value="{{clientData.remark}}"></textarea>
+    </view>
+    <button class="fix-painter-share tc" data-status="toEditStaff" formType="submit" hoverClass="none" style="border-radius:15rpx;width:92%;margin:60rpx auto;background:#e93636;">
+    保存
+  </button>
+</form>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}"></view>

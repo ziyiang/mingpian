@@ -1,0 +1,239 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            拼团列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+
+            <button class="layui-btn btn-add-collage" data-toggle="modal" data-target="#myModal">
+                <i class="layui-icon">&#xe608;</i> 添加
+            </button>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>商品名</th>
+                <th>封面图</th>
+                <th>拼团规格</th>
+                <th>拼团单价</th>
+                <th>成团人数</th>
+                <th>起购数量</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $collage $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$goods['name']}</td>
+                <td>
+                    <img src="{$goods['cover']}" alt="">
+                </td>
+                <td>{$item['info']['title']}</td>
+                <td>{$item['price']}</td>
+                <td>{$item['people']}</td>
+                <td>{$item['number']}</td>
+                <td>
+                    <button type="button" class="layui-btn layui-btn-xs btn-edit-item"
+                            itemId="{$item['id']}" itemNumber="{$item['number']}" itemPeople="{$item['people']}" itemPrice="{$item['price']}" data-toggle="modal" data-target="#myModalEdit">
+                        编辑
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary btn-delete-item"
+                            itemId="{$item['id']}">
+                        删除
+                    </button>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加拼团规则</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>请选择规格</label>
+                        <select class="form-control" name="collage-spe">
+                            {loop $data $item}
+                            <option value="{$item['id']}">{$item['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>起购数量</label>
+                        <input type="number" class="form-control" name="collage-number" placeholder="0" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>成团人数</label>
+                        <input type="number" class="form-control" name="collage-people" placeholder="0" min="2">
+                    </div>
+                    <div class="form-group">
+                        <label>成团单价</label>
+                        <input type="number" class="form-control" name="collage-price" placeholder="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary btn-insert-sub">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加拼团规则</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="itemId">
+                    <div class="form-group">
+                        <label>起购数量</label>
+                        <input type="number" class="form-control" name="collage-number-edit" placeholder="0" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>成团人数</label>
+                        <input type="number" class="form-control" name="collage-people-edit" placeholder="0" min="2">
+                    </div>
+                    <div class="form-group">
+                        <label>成团单价</label>
+                        <input type="number" class="form-control" name="collage-price-edit" placeholder="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary btn-edit-sub">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+    });
+
+    var goods_id = {$id};
+
+    //  新增拼团条件
+    $('.btn-insert-sub').click(function () {
+        layer.load();
+        var collageSpe = $("select[name='collage-spe']").val();
+        var collageNumber = $("input[name='collage-number']").val();
+        var collagePeople = $("input[name='collage-people']").val();
+        var collagePrice = $("input[name='collage-price']").val();
+
+        if (!collageNumber || !collagePrice)
+        {
+            layer.closeAll();
+            layer.msg('请完整填写信息!');
+            return false;
+        }
+        if (collagePeople < 2)
+        {
+            layer.closeAll();
+            layer.msg('成团人数不能小于2人!');
+            return false;
+        }
+        var url = "{php echo $this->createWebUrl('editCollage')}";
+        var data = {
+            action: 'addCollage',
+            collageSpe: collageSpe,
+            collageNumber: collageNumber,
+            collagePeople: collagePeople,
+            collagePrice: collagePrice,
+            goodsId: goods_id,
+        };
+
+        postData(url, data);
+    });
+
+    //  删除拼团条件
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否删除该拼团条件?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('editCollage')}";
+                var data = {
+                    action: 'deleteCollage',
+                    id: id,
+                    goodsId: goods_id,
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  编辑职位
+    $('.btn-edit-item').click(function () {
+        var id = $(this).attr('itemId');
+        var itemNumber = $(this).attr('itemNumber');
+        var itemPeople = $(this).attr('itemPeople');
+        var itemPrice = $(this).attr('itemPrice');
+        if (!id || !itemNumber || !itemPrice || !itemPeople) {
+            layer.msg('获取信息失败!');
+            return false;
+        }
+        $("input[name='itemId']").val(id);
+        $("input[name='collage-number-edit']").val(itemNumber);
+        $("input[name='collage-price-edit']").val(itemPrice);
+        $("input[name='collage-people-edit']").val(itemPeople);
+    });
+    //  提交编辑
+    $('.btn-edit-sub').click(function () {
+        var itemId = $("input[name='itemId']").val();
+        var collageNumber = $("input[name='collage-number-edit']").val();
+        var collagePrice = $("input[name='collage-price-edit']").val();
+        var collagePeople = $("input[name='collage-people-edit']").val();
+
+        var url = "{php echo $this->createWebUrl('editCollage')}";
+        var data = {
+            action: 'editCollage',
+            itemId: itemId,
+            collageNumber: collageNumber,
+            collagePrice: collagePrice,
+            collagePeople: collagePeople,
+        };
+
+        postData(url, data);
+    });
+
+</script>

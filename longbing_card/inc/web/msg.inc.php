@@ -1,0 +1,2 @@
+<?php
+ goto cL_m1; Y_gmq: require_once ROOT_PATH . "\57\151\x6e\x63\x2f\x77\x65\x37\x2e\160\x68\160"; goto TCBCd; cL_m1: global $_GPC, $_W; goto Byv8D; JYuO3: is_file(ROOT_PATH . "\x2f\x69\x6e\x63\57\167\145\67\x2e\x70\150\160") or exit("\x41\143\x63\x65\x73\163\x20\x44\145\x6e\151\145\x64\40\114\157\x6e\147\142\151\x6e\x67"); goto Y_gmq; Byv8D: define("\x52\x4f\x4f\x54\137\x50\101\x54\x48", IA_ROOT . "\x2f\141\x64\x64\x6f\x6e\x73\57\x6c\x6f\156\x67\x62\x69\x6e\x67\137\x63\x61\162\144\x2f"); goto JYuO3; TCBCd: include $this->template("\155\x73\x67");

@@ -1,0 +1,213 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {$infoM['name']}列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+
+            <input type="hidden" name="table_name" value="{$infoM['table_name']}">
+            <input type="hidden" name="modular_id" value="{$id}">
+
+            <button class="layui-btn btn-add">
+                <i class="layui-icon">&#xe608;</i> 添加
+            </button>
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only"></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputSearch" placeholder="请输入搜索内容" value="{$keyword}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-search">搜索</button>
+            </form>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>封面图</th>
+                <th>排序值</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th width="200">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $info $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['title']}</td>
+                <td>
+                    <img src="{$item['trueCover']}" alt="">
+                </td>
+                <td>{$item['top']}</td>
+                <td>
+                    {if $item['status'] == 1}
+                    <span class="layui-badge layui-bg-blue">显示</span>
+                    {else}
+                    <span class="layui-badge">不显示</span>
+                    {/if}
+                </td>
+                <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                <td>
+                    {if $item['status'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-down-item"
+                            itemId="{$item['id']}" modular_id="{$id}">
+                        下架
+                    </button>
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs btn-on-item"
+                            itemId="{$item['id']}" modular_id="{$id}">
+                        上架
+                    </button>
+                    {/if}
+                    <button type="button" class="layui-btn layui-btn-xs btn-edit-item"
+                            itemId="{$item['id']}" modular_id="{$id}">
+                        编辑
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-delete-item"
+                            itemId="{$item['id']}" modular_id="{$id}">
+                        删除
+                    </button>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+        <div id="dataTable"></div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'form', 'laypage'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            , layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                // console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('modular')}" + "&page=" + obj.curr + "&action=manage&id=" + '{$id}' + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('modular')}" + "&action=manage&id=" + '{$id}';
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('modular')}" + "&keyword=" + keyword + "&action=manage&id=" + '{$id}';
+        return false;
+    });
+
+    //  新增
+    $('.btn-add').click(function () {
+        layer.load();
+        var table_name = $("input[name='table_name']").val();
+        var modular_id = $("input[name='modular_id']").val();
+        if (!table_name) {
+            layer.msg('获取信息失败!');
+            return false;
+        }
+        var url = "{php echo $this->createWebUrl('editVideo')}" + "&table_name=" + table_name + "&modular_id=" + modular_id;
+        window.location.href = url;
+    });
+
+    //  编辑
+    $('.btn-edit-item').click(function () {
+        var id = $(this).attr('itemId');
+        var modular_id = $(this).attr('modular_id');
+        var table_name = $("input[name='table_name']").val();
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editVideo')}" + "&table_name=" + table_name + "&id=" +id + "&modular_id=" + modular_id;
+        window.location.href = url;
+    });
+
+    //  上下架
+    $('.btn-on-item, .btn-down-item').click(function () {
+        var id = $(this).attr('itemId');
+        var table_name = $("input[name='table_name']").val();
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否确认执行该操作?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('editVideo')}";
+                var data = {
+                    table_name: table_name,
+                    action: 'change',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  删除
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('itemId');
+        var table_name = $("input[name='table_name']").val();
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否确认执行该操作?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('editVideo')}";
+                var data = {
+                    table_name: table_name,
+                    action: 'delete',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+</script>

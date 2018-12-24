@@ -1,0 +1,116 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            员工信息
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <input type="hidden" name="table_name" value="{$table_name}">
+            <input type="hidden" name="modular_id" value="{$modular_id}">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">员工姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入员工姓名" autocomplete="off" class="layui-input" value="{$info['name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_image('cover', $info['cover']);}
+                    <div class="alert alert-success" role="alert">图片建议尺寸: 230 * 160</div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">职位</label>
+                <div class="layui-input-block">
+                    <input type="text" name="job" required  lay-verify="required" placeholder="请输入职位" autocomplete="off" class="layui-input" value="{$info['job']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">工作经历</label>
+                <div class="layui-input-block">
+                    <input type="text" name="experience1" required lay-verify="required" placeholder="请输入工作经历" autocomplete="off" class="layui-input" value="{$info['experience1']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">工作经历</label>
+                <div class="layui-input-block">
+                    <input type="text" name="experience2" required placeholder="请输入工作经历" autocomplete="off" class="layui-input" value="{$info['experience2']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">毕业院校</label>
+                <div class="layui-input-block">
+                    <input type="text" name="experience3" required  lay-verify="required" placeholder="请输入工作经历" autocomplete="off" class="layui-input" value="{$info['experience3']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序值(值越大, 排序越靠前)</label>
+                <div class="layui-input-block">
+                    <input type="number" min="0" name="top" required  lay-verify="required" placeholder="请输入排序值" autocomplete="off" class="layui-input" value="{$info['top']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button  class="layui-btn layui-btn-primary" onclick="javascript: history.back()">返回</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+<script>
+    $(function () {
+        layui.use(['layer', 'form'], function () {
+            var layer = layui.layer
+                , form = layui.form
+
+            form.on('submit(formSub)', function(data){
+                var formData = data.field;
+                layer.load();
+
+                if (formData.cover == '') {
+                    layer.msg('请选择头像');
+                    return false;
+                }
+
+                var url = "{php echo $this->createWebUrl('editStaff')}" + "&action=editSub";
+
+                var id = '{$id}';
+                var data = {
+                    action: 'editSub',
+                    formData: formData
+                };
+                if (id > 0) {
+                    data.id = id;
+                }
+
+                postDataGoBack(url, data);
+
+                return false;
+            });
+        });
+    })
+</script>

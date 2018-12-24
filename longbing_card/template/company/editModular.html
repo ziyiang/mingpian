@@ -1,0 +1,185 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            模块信息
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">模块名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入模块名" autocomplete="off" class="layui-input" value="{$info['name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">前台是否显示模块名</label>
+                <div class="layui-input-block">
+                    {if $id == 0}
+                    <input type="radio" name="show_name" value="0" title="不显示">
+                    <input type="radio" name="show_name" value="1" title="显示" checked>
+                    {else}
+                    {if $info['show_name'] == 0}
+                    <input type="radio" name="show_name" value="0" title="不显示" checked>
+                    <input type="radio" name="show_name" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show_name" value="0" title="不显示">
+                    <input type="radio" name="show_name" value="1" title="显示" checked>
+                    {/if}
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示顶部图标</label>
+                <div class="layui-input-block">
+                    {if $id == 0}
+                    <input type="radio" name="show_top" value="0" title="不显示">
+                    <input type="radio" name="show_top" value="1" title="显示" checked>
+                    {else}
+                    {if $info['show_top'] == 0}
+                    <input type="radio" name="show_top" value="0" title="不显示" checked>
+                    <input type="radio" name="show_top" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show_top" value="0" title="不显示">
+                    <input type="radio" name="show_top" value="1" title="显示" checked>
+                    {/if}
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示更多按钮</label>
+                <div class="layui-input-block">
+                    {if $id == 0}
+                    <input type="radio" name="show_more" value="0" title="不显示">
+                    <input type="radio" name="show_more" value="1" title="显示" checked>
+                    {else}
+                    {if $info['show_more'] == 0}
+                    <input type="radio" name="show_more" value="0" title="不显示" checked>
+                    <input type="radio" name="show_more" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show_more" value="0" title="不显示">
+                    <input type="radio" name="show_more" value="1" title="显示" checked>
+                    {/if}
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否在官网首页显示</label>
+                <div class="layui-input-block">
+                    {if $id == 0}
+                    <input type="radio" name="show" value="0" title="不显示">
+                    <input type="radio" name="show" value="1" title="显示" checked>
+                    {else}
+                    {if $info['show'] == 0}
+                    <input type="radio" name="show" value="0" title="不显示" checked>
+                    <input type="radio" name="show" value="1" title="显示">
+                    {else}
+                    <input type="radio" name="show" value="0" title="不显示">
+                    <input type="radio" name="show" value="1" title="显示" checked>
+                    {/if}
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面图</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_image('cover', $info['cover']);}
+                    <a href="http://www.iconfont.cn/" target="_blank">
+                        <div class="alert alert-success" role="alert">
+                            图标获取地址 :  http://www.iconfont.cn/
+                        </div>
+                    </a>
+                    <div class="alert alert-success" role="alert">图片建议尺寸: 100 * 100</div>
+                </div>
+            </div>
+
+            {if $id == 0}
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">模块标识(只能为英文字母, 添加后不可修改)</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<input type="text" min="0" name="identification" required  lay-verify="required" placeholder="请输入模块标识" autocomplete="off" class="layui-input" value="{$info['identification']}"  onkeyup="value=value.replace(/[^a-zA-Z]/g,'')">-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">模块类型(添加后不可修改)</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="required">
+                        <option value="1">文章列表</option>
+                        <option value="2">图文详情</option>
+                        <option value="3">招聘信息</option>
+                        <option value="4">联系我们</option>
+                        <option value="5">员工展示</option>
+                        <option value="6">拨打电话</option>
+                        <option value="7">视频模块</option>
+                    </select>
+                </div>
+            </div>
+            {/if}
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序值(值越大, 排序越靠前)</label>
+                <div class="layui-input-block">
+                    <input type="number" min="0" name="top" required  lay-verify="required" placeholder="请输入排序值" autocomplete="off" class="layui-input" value="{$info['top']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button  class="layui-btn layui-btn-primary" onclick="javascript: history.back()">返回</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    $(function () {
+        layui.use(['layer', 'form'], function () {
+            var layer = layui.layer
+                , form = layui.form
+
+            form.on('submit(formSub)', function(data){
+                var formData = data.field;
+
+                if (formData.cover == '') {
+                    layer.msg('请选择封面图');
+                    return false;
+                }
+
+                var url = "{php echo $this->createWebUrl('modular')}" + "&action=editSub";
+
+                var id = '{$id}';
+                var data = {
+                    action: 'editSub',
+                    formData: formData
+                };
+                if (id > 0) {
+                    data.id = id;
+                }
+                postData(url, data);
+
+                return false;
+            });
+        });
+    })
+</script>

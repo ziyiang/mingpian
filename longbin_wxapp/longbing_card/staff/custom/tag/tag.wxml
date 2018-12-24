@@ -1,0 +1,23 @@
+<view class="container {{globalData.isIphoneX?'isIphoneX':''}}">
+    <view class="top">
+        <view class="old">
+            <view bindtap="lableclick" class="{{clickIndex==index?'tx_col_ba_c':'tx_col_ba'}} center_label" data-index="{{index}}" wx:for="{{lists}}" wx:key="index">
+                <text>{{item.name}}</text>
+                <i bindtap="reduce" class="iconfont icon-shanchu" data-id="{{item.id}}" wx:if="{{clickIndex==index?true:false}}"></i>
+            </view>
+        </view>
+        <input bindbulr="bindbulr" bindconfirm="blur_addsInput" bindinput="bindinput" placeholder="添加标签" style="width:100rpx;" value="{{addsInput}}"></input>
+    </view>
+    <view class="center">
+        <text class="center_title">所有标签</text>
+        <view class="center_labels">
+            <view bindtap="lableclick2" class="tx_col_ba center_label" data-name="{{item.name}}" wx:for="{{Unchanged}}" wx:key="index">
+                <text>{{item.name}}</text>
+            </view>
+        </view>
+    </view>
+    <view class="{{globalData.isIphoneX?'isIphoneX':''}}" style="height:100rpx;"></view>
+    <view class="bottom {{globalData.isIphoneX?'isIphoneX':''}}">
+        <text bindtap="return1">确定发布</text>
+    </view>
+</view>

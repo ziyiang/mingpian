@@ -1,0 +1,188 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            公司信息管理
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+            <!--jingshuixian 添加是否显示-->
+            {if LONGBING_AUTH_COPYRIGHT }
+            <div class="layui-form-item">
+                <label class="layui-form-label">小程序底部版权</label>
+                <div class="layui-input-block">
+                    {php echo tpl_form_field_image('copyright', $config['copyright']);}
+                    <div class="alert alert-success" role="alert" style="margin-top: 10px">
+                        图片建议尺寸: 193 * 87
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">小程序底部文字版权</label>
+                <div class="layui-input-block">
+                    <input type="text" name="logo_text" placeholder="请输入文字" autocomplete="off" class="layui-input" value="{$config['logo_text']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">小程序底部版权显示方式</label>
+                <div class="layui-input-block">
+                    {if $config['logo_switch'] == 1 }
+                    <input type="radio" name="logo_switch" value="0" title="图片版权">
+                    <input type="radio" name="logo_switch" value="1" title="文字版权" checked>
+                    <input type="radio" name="logo_switch" value="2" title="图片加文字">
+                    <input type="radio" name="logo_switch" value="3" title="关闭版权">
+                    {elseif $config['logo_switch'] == 2}
+                    <input type="radio" name="logo_switch" value="0" title="图片版权">
+                    <input type="radio" name="logo_switch" value="1" title="文字版权">
+                    <input type="radio" name="logo_switch" value="2" title="图片加文字" checked>
+                    <input type="radio" name="logo_switch" value="3" title="关闭版权">
+                    {elseif $config['logo_switch'] == 3}
+                    <input type="radio" name="logo_switch" value="0" title="图片版权">
+                    <input type="radio" name="logo_switch" value="1" title="文字版权">
+                    <input type="radio" name="logo_switch" value="2" title="图片加文字">
+                    <input type="radio" name="logo_switch" value="3" title="关闭版权" checked>
+                    {else}
+                    <input type="radio" name="logo_switch" value="0" title="图片版权" checked>
+                    <input type="radio" name="logo_switch" value="1" title="文字版权">
+                    <input type="radio" name="logo_switch" value="2" title="图片加文字">
+                    <input type="radio" name="logo_switch" value="3" title="关闭版权">
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">点击版权信息拨打电话号码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="logo_phone" placeholder="请输入电话" autocomplete="off" class="layui-input" value="{$config['logo_phone']}">
+                </div>
+            </div>
+            {/if}
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">小程序服务通知模板ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mini_template_id" placeholder="请输入小程序消息通知模板ID" autocomplete="off" class="layui-input" value="{$config['mini_template_id']}">
+                    <div class="alert alert-success" role="alert" style="margin-top: 10px">
+                        请在小程序后台添加消息模板, 模板标题: 留言通知; 关键词: 客户名称, 留言内容, 留言时间
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公众号模块ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="notice_i" placeholder="请输入公众号模块ID" autocomplete="off" class="layui-input" value="{$config['notice_i']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公众号通知模板ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="min_tmppid" placeholder="请输入公众号通知模板ID" autocomplete="off" class="layui-input" value="{$config['min_tmppid']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">消息通知方式</label>
+                <div class="layui-input-block">
+                    {if $config['notice_switch'] == 1 }
+                    <input type="radio" name="notice_switch" value="0" title="服务通知">
+                    <input type="radio" name="notice_switch" value="1" title="公众号通知" checked>
+                    {else}
+                    <input type="radio" name="notice_switch" value="0" title="服务通知" checked>
+                    <input type="radio" name="notice_switch" value="1" title="公众号通知">
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">小程序名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mini_app_name" placeholder="请输入小程序名" autocomplete="off" class="layui-input" value="{$config['mini_app_name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否允许小程序端创建名片</label>
+                <div class="layui-input-block">
+                    {if $config['allow_create'] == 1 }
+                    <input type="radio" name="allow_create" value="0" title="关闭">
+                    <input type="radio" name="allow_create" value="1" title="开启" checked>
+                    {else}
+                    <input type="radio" name="allow_create" value="0" title="关闭" checked>
+                    <input type="radio" name="allow_create" value="1" title="开启">
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名片列表创建名片文案</label>
+                <div class="layui-input-block">
+                    <input type="text" name="create_text" placeholder="请输入文案" autocomplete="off" class="layui-input" value="{$config['create_text']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单未支付超时时间</label>
+                <div class="layui-input-block">
+                    <input type="number" min="1800" name="order_overtime" placeholder="请输入时间" autocomplete="off" class="layui-input" value="{$config['order_overtime']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">拼团未成功超时时间</label>
+                <div class="layui-input-block">
+                    <input type="number" min="1800" name="collage_overtime" placeholder="请输入时间" autocomplete="off" class="layui-input" value="{$config['collage_overtime']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formCompany">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form
+
+        form.on('submit(formCompany)', function(data){
+            var formData = data.field;
+
+            var url = "{php echo $this->createWebUrl('config')}";
+            var id = '{$id}';
+            if (!id)
+            {
+                return false;
+            }
+            var data = {
+                action: 'edit',
+                id: id,
+                formData: formData
+            };
+
+            postData(url, data);
+
+            return false;
+        });
+    });
+
+</script>

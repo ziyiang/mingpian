@@ -1,0 +1,121 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            评论列表
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="div-search-body">
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only"></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputSearch" placeholder="请输入搜索内容" value="{$keyword}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-search">搜索</button>
+            </form>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户ID</th>
+                <th>动态ID</th>
+                <th>动态标题</th>
+                <th>评论内容</th>
+                <th>评论时间</th>
+                <th width="200">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $comments $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['user_id']}</td>
+                <td>{$item['timeline_id']}</td>
+                <td>{$item['title']}</td>
+                <td>{$item['content']}</td>
+                <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                <td>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-delete-item"
+                            itemId="{$item['id']}">
+                        删除
+                    </button>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+        <div id="dataTable"></div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'form', 'laypage'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            , layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                // console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('comment')}" + "&page=" + obj.curr + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('comment')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('comment')}" + "&keyword=" + keyword;
+        return false;
+    });
+
+    //  删除
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('comment')}" + "&action=delete&id=" + id;
+        window.location.href = url
+    });
+
+
+
+</script>

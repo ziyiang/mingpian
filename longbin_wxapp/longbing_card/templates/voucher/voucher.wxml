@@ -1,0 +1,32 @@
+<template name="voucher">
+    <block wx:if="{{voucherStatus.tag=='big'}}">
+        <view class="bg_opacity_sec fix"></view>
+        <view class="voucher-sec fix tc">
+            <image class="abs voucher-bg" src="{{voucherStatus.status=='unreceive'?'http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/UcOcEO11idL8g7a5AH9EVvc9PAoL5M.png':'http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/MLste5415kBK35tJDhKslKHSEOjMh4.png'}}"></image>
+            <view class="abs content tc">
+                <block wx:if="{{voucherStatus.status=='unreceive'}}">
+                    <view class="text abs text1">领福包</view>
+                    <button bindgetphonenumber="getVoucher" class="text abs text2" hoverClass="none" openType="getPhoneNumber" style="line-height:initial;width:100%;hegiht:114rpx;">拆</button>
+                    <view class="text abs text3">最高</view>
+                    <view class="text abs text4">
+                        <em>66</em>元</view>
+                    <view class="text abs text5 ellipsis">授权成功 即可领取</view>
+                </block>
+                <block wx:if="{{voucherStatus.status=='receive'}}">
+                    <view class="text abs text6">福包</view>
+                    <view class="text abs text3" style="top:334rpx;">恭喜您获得</view>
+                    <view class="text abs text4" style="top:380rpx;">
+                        <em>66</em>元</view>
+                    <view class="use abs">去使用</view>
+                    <view class="text abs text5 ellipsis">门店扫码“消费满500元可使用”</view>
+                </block>
+            </view>
+            <i bindtap="toMiniVoucher" class="abs iconfont icon-guanbi1"></i>
+        </view>
+    </block>
+    <view bindtap="toBigVoucher" class="mini-voucher-sec fix" wx:if="{{voucherStatus.tag=='mini'}}">
+        <view class="barrage abs tc">某某某...获得1.88元</view>
+        <image class="abs" src="http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/YQm6ooJ1GOQsooQ53TM33tt16Sw1Os.png"></image>
+        <view class="abs text tc">拆福包</view>
+    </view>
+</template>

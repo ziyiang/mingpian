@@ -1,0 +1,41 @@
+<import src="../../../templates/loading/loading.wxml"></import>
+<view class="collage-scroll-search-sec {{tmpData.keyword?'hide':''}}">
+    <scroll-view class="fl scroll-view-navTop-sec clearfix" scrollIntoView="{{scrollNav}}" scrollWithAnimation="true" scrollX="true" style=" white-space: nowrap; display: flex;">
+        <view bindtap="toJump" class="scroll-item-de" data-categoryid="{{tmpData.all_categoryid}}" data-status="toTabClickMore" id="scrollNavAll">
+            <view class="scroll-item-title {{'100000101'==tmpData.activeIndex?'scroll-item-active':''}}">全部</view>
+            <view class="bottom-split" wx:if="{{'100000101'==tmpData.activeIndex}}"></view>
+        </view>
+        <view bindtap="toJump" class="scroll-item-de" data-categoryid="{{item.id}}" data-index="{{index}}" data-status="toTabClick" id="scrollNav{{item.id}}" wx:for="{{tmpData.navTypes.sec}}" wx:key="index">
+            <view class="scroll-item-title {{index==tmpData.activeIndex?'scroll-item-active':''}}">{{item.title}}</view>
+            <view class="bottom-split" wx:if="{{index==tmpData.activeIndex}}"></view>
+        </view>
+    </scroll-view>
+    <view bindtap="toJump" class="search tc fr" data-status="toShowMore" data-type="{{showMoreStatus}}">
+        <i class="iconfont icon-arrow-down"></i>
+    </view>
+</view>
+<view class="shop-product-sec clearfix">
+    <view bindtap="toJump" class="child br-10 rel" data-status="toShopDetail" data-url="/longbing_card/pages/shop/detail/detail?id={{item.id}}&to_uid={{globalData.to_uid}}&from_id={{globalData.from_id}}" wx:for="{{shop_all.list}}" wx:key="key">
+        <em class="abs tag" wx:if="{{item.is_collage==1}}">拼团商品</em>
+        <image mode="aspectFill" src="{{item.trueCover}}"></image>
+        <view class="clamp2">{{item.name}}</view>
+        <view class="price">¥{{item.price==0?'面议':item.price}}</view>
+    </view>
+</view>
+<template is="loading" data="{{...shop_all,loading:loadingShop}}"></template>
+<view class="fix bg_opacity_sec {{showMoreStatus==1?'':'hide'}}"></view>
+<view class="shop-nav-sec clearfix fix {{showMoreStatus==1?'shop-animatoinsA':''}}">
+    <view bindtap="toJump" class="flex" data-status="toShowMore" data-type="{{showMoreStatus}}">
+        <view class="flex100-5">全部分类</view>
+        <view class="flex100-5 tr">
+            <em>
+                <i class="iconfont icon-arrow-down"></i>
+            </em>
+        </view>
+    </view>
+    <view class="content">
+        <view bindtap="toJump" class="fl tc title ellipsis {{'100000101'==tmpData.activeIndex?'active':''}}" data-categoryid="{{tmpData.all_categoryid}}" data-index="{{index}}" data-status="toTabClickMore" id="scrollAll">全部</view>
+        <view bindtap="toJump" class="fl tc title ellipsis {{index==tmpData.activeIndex?'active':''}}" data-categoryid="{{item.id}}" data-index="{{index}}" data-status="toTabClick" id="scroll{{item.id}}" wx:for="{{tmpData.navTypes.sec}}" wx:key="index">{{item.title}}</view>
+    </view>
+</view>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}"></view>

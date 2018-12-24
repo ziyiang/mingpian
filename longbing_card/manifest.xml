@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="">
+	<application setting="false">
+		<name><![CDATA[龙兵AI雷达超级智能名片]]></name>
+		<identifie><![CDATA[longbing_card]]></identifie>
+		<version><![CDATA[2.2.0]]></version>
+		<type><![CDATA[biz]]></type>
+		<ability><![CDATA[龙兵AI雷达超级智能名片]]></ability>
+		<description><![CDATA[龙兵AI雷达超级智能名片]]></description>
+		<author><![CDATA[爬行者网络科技]]></author>
+		<url><![CDATA[www.pxzteam.com]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports>
+			<item type="wxapp" />
+		</supports>
+	</platform>
+	<bindings>
+		<menu>
+			<entry title="AI雷达" do="ai" state="" direct="false" />
+      <entry title="用户名片管理" do="user" state="" direct="false" />
+      <entry title="职位管理" do="job" state="" direct="false" />
+      <entry title="公司管理" do="group" state="" direct="false" />
+      <entry title="商品管理" do="goods" state="" direct="false" />
+      <entry title="商品分类" do="type" state="" direct="false" />
+      <entry title="官网模块" do="modular" state="" direct="false" />
+      <entry title="公司动态" do="timeline" state="" direct="false" />
+      <entry title="评论管理" do="comment" state="" direct="false" />
+      <entry title="系统配置" do="config" state="" direct="false" />
+      <entry title="自定义话术" do="reply" state="" direct="false" />
+      <entry title="底部菜单" do="tabbar" state="" direct="false" />
+      <entry title="话术分类" do="replytype" state="" direct="false" />
+      <entry title="订单列表" do="orders" state="" direct="false" />
+		</menu>
+		<page>
+			<entry title="首页" do="/longbing_card/pages/index/index" state="" direct="" />
+		</page>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[DROP TABLE IF EXISTS `ims_longbing_card_articles`;
+CREATE TABLE `ims_longbing_card_articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '标题',
+  `cover` varchar(500) NOT NULL DEFAULT '' COMMENT '封面图',
+  `view_count` int(10) NOT NULL DEFAULT '0' COMMENT '浏览量',
+  `top` int(10) NOT NULL DEFAULT '0' COMMENT '排序值',
+  `content` text,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_call`;
+CREATE TABLE `ims_longbing_card_call` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `phone` varchar(20) NOT NULL,
+  `modular_id` int(5) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `top` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--官网打电话表';
+DROP TABLE IF EXISTS `ims_longbing_card_chart`;
+CREATE TABLE `ims_longbing_card_chart` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `content` varchar(500) NOT NULL DEFAULT '',
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `other_uid` int(11) NOT NULL DEFAULT '0',
+  `is_read` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1--已读  0--未读',
+  `kind` varchar(30) NOT NULL DEFAULT '' COMMENT 'txt 文本 img 图片 vioce语音',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='名片--聊天记录';
+DROP TABLE IF EXISTS `ims_longbing_card_chat`;
+CREATE TABLE `ims_longbing_card_chat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '发起会话的用户id',
+  `target_id` int(10) NOT NULL COMMENT '会话对象用户id',
+  `type` int(3) NOT NULL DEFAULT '1' COMMENT '类型: 1=>one2one 2=>gourp',
+  `gourp_ids` text COMMENT '此群组中的用户id',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_client_info`;
+CREATE TABLE `ims_longbing_card_client_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户id',
+  `staff_id` int(10) NOT NULL COMMENT '员工id',
+  `name` varchar(20) NOT NULL COMMENT '姓名',
+  `sex` varchar(10) NOT NULL COMMENT '性别',
+  `phone` varchar(20) NOT NULL COMMENT '手机号',
+  `email` varchar(20) NOT NULL COMMENT '邮箱',
+  `company` varchar(50) NOT NULL COMMENT '公司',
+  `position` varchar(20) NOT NULL COMMENT '职位',
+  `address` varchar(100) NOT NULL COMMENT '详细地址',
+  `birthday` varchar(20) NOT NULL COMMENT '生日',
+  `is_mask` varchar(3) NOT NULL COMMENT '是否屏蔽',
+  `remark` varchar(500) NOT NULL COMMENT '备注',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_collection`;
+CREATE TABLE `ims_longbing_card_collection` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '当前用户id',
+  `to_uid` int(10) NOT NULL DEFAULT '0' COMMENT '被收藏人id (名片人id)',
+  `from_uid` int(10) NOT NULL DEFAULT '0' COMMENT '分享人id',
+  `create_time` int(10) NOT NULL DEFAULT '0',
+  `update_time` int(10) NOT NULL DEFAULT '0',
+  `scene` int(10) NOT NULL DEFAULT '0',
+  `status` int(5) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_2` (`uid`,`to_uid`),
+  KEY `to_uid` (`to_uid`) USING BTREE,
+  KEY `from_uid` (`from_uid`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COMMENT='名片--名片夹';
+DROP TABLE IF EXISTS `ims_longbing_card_company`;
+CREATE TABLE `ims_longbing_card_company` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '公司名称',
+  `addr` varchar(100) NOT NULL DEFAULT '' COMMENT '公司地址',
+  `logo` varchar(255) NOT NULL DEFAULT '' COMMENT '公司logo',
+  `url` varchar(50) NOT NULL DEFAULT '' COMMENT '公司网址',
+  `phone` varchar(100) NOT NULL DEFAULT '' COMMENT '联系方式',
+  `desc` text NOT NULL COMMENT '商城背景图',
+  `culture` text NOT NULL COMMENT '官网轮播图',
+  `longitude` varchar(50) NOT NULL DEFAULT '0' COMMENT '经度',
+  `latitude` varchar(50) NOT NULL DEFAULT '0' COMMENT '纬度',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL COMMENT '0',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `short_name` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='名片--公司表';
+DROP TABLE IF EXISTS `ims_longbing_card_config`;
+CREATE TABLE `ims_longbing_card_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `multi` int(11) NOT NULL DEFAULT '0' COMMENT '是否允许一个用户拥有多张名片',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `show_card` int(3) NOT NULL DEFAULT '0',
+  `copyright` varchar(200) NOT NULL DEFAULT '',
+  `mini_template_id` varchar(200) NOT NULL DEFAULT '',
+  `mini_app_name` varchar(20) NOT NULL DEFAULT '',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `allow_create` int(3) NOT NULL DEFAULT '1',
+  `create_text` varchar(100) NOT NULL DEFAULT '创建我的智能名片',
+  `logo_switch` int(3) NOT NULL DEFAULT '0',
+  `logo_text` varchar(100) NOT NULL DEFAULT '',
+  `logo_phone` varchar(20) NOT NULL DEFAULT '',
+  `notice_switch` int(3) NOT NULL DEFAULT '0',
+  `notice_i` int(10) NOT NULL DEFAULT '0',
+  `min_tmppid` varchar(200) NOT NULL DEFAULT '',
+  `order_overtime` int(10) NOT NULL DEFAULT '1800',
+  `collage_overtime` int(10) NOT NULL DEFAULT '172800',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='名片--配置表';
+DROP TABLE IF EXISTS `ims_longbing_card_contact`;
+CREATE TABLE `ims_longbing_card_contact` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name1` varchar(30) NOT NULL DEFAULT '' COMMENT '联系人',
+  `phone1` varchar(30) NOT NULL DEFAULT '' COMMENT '联系方式',
+  `name2` varchar(30) NOT NULL DEFAULT '' COMMENT '联系人',
+  `phone2` varchar(30) NOT NULL DEFAULT '' COMMENT '联系方式',
+  `name3` varchar(30) NOT NULL DEFAULT '' COMMENT '联系人',
+  `phone3` varchar(30) NOT NULL DEFAULT '' COMMENT '联系方式',
+  `address` varchar(100) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `longitude` varchar(30) NOT NULL DEFAULT '' COMMENT '经度',
+  `latitude` varchar(30) NOT NULL DEFAULT '' COMMENT '纬度',
+  `content` text,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  `show_map` int(3) NOT NULL DEFAULT '1',
+  `show_map_desc` int(3) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_copy_count`;
+CREATE TABLE `ims_longbing_card_copy_count` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `to_uid` int(10) NOT NULL,
+  `type` int(3) NOT NULL COMMENT '鎿嶄綔鍐呭, 1=>鍚屾鍒伴€氳褰?2=>鎷ㄦ墦鎵嬫満鍙?3=>鎷ㄦ墦搴ф満鍙?4=>澶嶅埗寰俊 5=>澶嶅埗閭 6=>澶嶅埗鍏徃鍚?7=>鏌ョ湅瀹氫綅',
+  `target` varchar(200) NOT NULL DEFAULT '',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--用户操作内容记录表';
+DROP TABLE IF EXISTS `ims_longbing_card_count`;
+CREATE TABLE `ims_longbing_card_count` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `to_uid` int(10) NOT NULL,
+  `type` int(3) NOT NULL COMMENT '浏览内容,sign=view时 1=>浏览商城列表 2=>浏览商品详情 3=>浏览动态列表 4=>点赞动态 5=>动态留言 6=>浏览公司官网 7=>浏览动态详情  sign=copy时 1=>同步到通讯录 2=>拨打手机号 3=>拨打座机号 4=>复制微信 5=>复制邮箱 6=>复制公司名 7=>查看定位 8=>咨询产品 9=>播放语音  当sign=praise时 1 语音点赞 2 人气(查看),3 点赞   4 分享',
+  `sign` varchar(10) NOT NULL,
+  `target` varchar(200) NOT NULL DEFAULT '',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `scene` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_coupon`;
+CREATE TABLE `ims_longbing_card_coupon` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL COMMENT '标题',
+  `type` int(10) NOT NULL DEFAULT '1' COMMENT '优惠券类型 1 => 线上; 2 => 线下',
+  `company_id` int(5) NOT NULL DEFAULT '0',
+  `full` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '满',
+  `reduce` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '减',
+  `number` int(10) NOT NULL DEFAULT '1' COMMENT '人数',
+  `top` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--福包/优惠券';
+DROP TABLE IF EXISTS `ims_longbing_card_culture`;
+CREATE TABLE `ims_longbing_card_culture` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` text,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_custom_qr`;
+CREATE TABLE `ims_longbing_card_custom_qr` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '员工id',
+  `title` varchar(100) NOT NULL COMMENT '自定义码标题',
+  `content` varchar(1000) NOT NULL COMMENT '自定义码内容',
+  `path` varchar(200) NOT NULL DEFAULT '',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--员工自定义码表';
+DROP TABLE IF EXISTS `ims_longbing_card_custom_qr_record`;
+CREATE TABLE `ims_longbing_card_custom_qr_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户id',
+  `staff_id` int(10) NOT NULL COMMENT '员工id',
+  `qr_id` int(10) NOT NULL COMMENT '自定义码id',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户自定义码浏览记录表';
+DROP TABLE IF EXISTS `ims_longbing_card_date`;
+CREATE TABLE `ims_longbing_card_date` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `staff_id` int(10) NOT NULL,
+  `date` varchar(20) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_desc`;
+CREATE TABLE `ims_longbing_card_desc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` text,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  `introduction` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_longbing_card_extension`;
+CREATE TABLE `ims_longbing_card_extension` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '员工id',
+  `goods_id` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--员工主推产品表';
+DROP TABLE IF EXISTS `ims_longbing_card_formId`;
+CREATE TABLE `ims_longbing_card_formId` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `formId` varchar(100) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '0' COMMENT '1=>未使用过 2=>使用过',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`formId`)
+) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8mb4 COMMENT='名片--formId记录表';
+DROP TABLE IF EXISTS `ims_longbing_card_forward`;
+CREATE TABLE `ims_longbing_card_forward` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户转发人的id',
+  `staff_id` int(10) NOT NULL COMMENT '员工id',
+  `type` int(3) NOT NULL DEFAULT '1' COMMENT '1=>转发名片 2=>转发商品 3=>转发动态 4=>转发公司官网',
+  `target_id` int(10) NOT NULL COMMENT '转发内容的id 当type=2,3时有效',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_goods`;
+CREATE TABLE `ims_longbing_card_goods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名',
+  `cover` varchar(500) NOT NULL DEFAULT '' COMMENT '商品封面图',
+  `images` varchar(5000) NOT NULL DEFAULT '' COMMENT '商品轮播图',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `view_count` int(10) NOT NULL DEFAULT '0' COMMENT '商品浏览量',
+  `sale_count` int(10) NOT NULL DEFAULT '0' COMMENT '商品销售量',
+  `desc` varchar(500) NOT NULL DEFAULT '' COMMENT '商品简介',
+  `content` text,
+  `top` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `type` int(10) NOT NULL,
+  `collage_count` int(10) NOT NULL DEFAULT '0',
+  `is_collage` int(10) NOT NULL DEFAULT '0',
+  `freight` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `recommend` int(3) NOT NULL DEFAULT '0',
+  `stock` int(10) NOT NULL DEFAULT '0',
+  `type_p` int(10) NOT NULL DEFAULT '0',
+  `image_url` varchar(2000) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='名片--商品表';
+DROP TABLE IF EXISTS `ims_longbing_card_goods_collection`;
+CREATE TABLE `ims_longbing_card_goods_collection` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户的fans_id',
+  `goods_id` int(11) NOT NULL COMMENT '商品id',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--商品收藏表';
+DROP TABLE IF EXISTS `ims_longbing_card_group_number`;
+CREATE TABLE `ims_longbing_card_group_number` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(10) NOT NULL,
+  `openGId` varchar(100) NOT NULL,
+  `number` int(10) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--群人数表';
+DROP TABLE IF EXISTS `ims_longbing_card_job`;
+CREATE TABLE `ims_longbing_card_job` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL COMMENT '名称',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='名片--职位表';
+DROP TABLE IF EXISTS `ims_longbing_card_jobs`;
+CREATE TABLE `ims_longbing_card_jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '招聘职位',
+  `money` varchar(20) NOT NULL DEFAULT '' COMMENT '薪资',
+  `experience` varchar(20) NOT NULL DEFAULT '' COMMENT '经验',
+  `education` varchar(20) NOT NULL DEFAULT '' COMMENT '学历',
+  `top` int(10) NOT NULL DEFAULT '0',
+  `content` text,
+  `phone` varchar(20) NOT NULL DEFAULT '' COMMENT 'hr电话',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_longbing_card_label`;
+CREATE TABLE `ims_longbing_card_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '标签',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='名片--标签表';
+DROP TABLE IF EXISTS `ims_longbing_card_message`;
+CREATE TABLE `ims_longbing_card_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` int(10) NOT NULL COMMENT '会话记录表id',
+  `user_id` int(10) NOT NULL COMMENT '发送消息用户id',
+  `target_id` int(10) NOT NULL COMMENT '接收消息用户id',
+  `content` text COMMENT '消息内容',
+  `status` int(3) NOT NULL DEFAULT '1' COMMENT '1=>未读消息 2=>已读 3=>已撤销 4=>已删除',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `message_type` varchar(50) NOT NULL DEFAULT 'text',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `chat_id` (`chat_id`,`user_id`,`target_id`,`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--聊天记录表';
+DROP TABLE IF EXISTS `ims_longbing_card_modular`;
+CREATE TABLE `ims_longbing_card_modular` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名',
+  `show_name` int(3) NOT NULL DEFAULT '1' COMMENT '前台是否显示模块名',
+  `cover` varchar(500) NOT NULL DEFAULT '' COMMENT '图标',
+  `identification` varchar(20) NOT NULL DEFAULT '0' COMMENT '模块标识',
+  `table_name` varchar(200) NOT NULL DEFAULT '0' COMMENT '表名',
+  `type` int(3) NOT NULL DEFAULT '1' COMMENT '1=>文章列表, 2=>图文详情, 3=>招聘信息, 4=>联系我们, 5=>员工展示',
+  `top` int(10) NOT NULL DEFAULT '0' COMMENT '排序值',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `show_top` int(3) NOT NULL DEFAULT '1',
+  `show_more` int(3) NOT NULL DEFAULT '1',
+  `show` int(3) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='名片--官网模块表';
+DROP TABLE IF EXISTS `ims_longbing_card_pages`;
+CREATE TABLE `ims_longbing_card_pages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) NOT NULL,
+  `page` varchar(200) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--小程序页面表';
+DROP TABLE IF EXISTS `ims_longbing_card_poster`;
+CREATE TABLE `ims_longbing_card_poster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL COMMENT '标题',
+  `img` varchar(500) NOT NULL COMMENT '海报链接',
+  `type_id` int(10) NOT NULL,
+  `company_id` int(5) NOT NULL DEFAULT '0',
+  `top` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='名片--海报';
+DROP TABLE IF EXISTS `ims_longbing_card_poster_type`;
+CREATE TABLE `ims_longbing_card_poster_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL COMMENT '标题',
+  `company_id` int(5) NOT NULL DEFAULT '0',
+  `top` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='名片--海报分类表';
+DROP TABLE IF EXISTS `ims_longbing_card_praise`;
+CREATE TABLE `ims_longbing_card_praise` (
+  `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `to_uid` int(11) NOT NULL DEFAULT '0' COMMENT '被点赞者id',
+  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '类型  1 语音点赞 2 人气(查看),3 点赞   4 分享',
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='名片--点赞表';
+DROP TABLE IF EXISTS `ims_longbing_card_quick_reply`;
+CREATE TABLE `ims_longbing_card_quick_reply` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `content` text,
+  `number` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `type` int(3) NOT NULL DEFAULT '0',
+  `top` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='名片--快速回复表';
+DROP TABLE IF EXISTS `ims_longbing_card_rate`;
+CREATE TABLE `ims_longbing_card_rate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `staff_id` int(10) NOT NULL,
+  `rate` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_longbing_card_reply_type`;
+CREATE TABLE `ims_longbing_card_reply_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) NOT NULL,
+  `top` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--话术分类表';
+DROP TABLE IF EXISTS `ims_longbing_card_share_group`;
+CREATE TABLE `ims_longbing_card_share_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '员工id',
+  `openGId` varchar(100) NOT NULL COMMENT '群对当前小程序的唯一 ID',
+  `view_card` int(10) NOT NULL DEFAULT '0' COMMENT '浏览名片的次数',
+  `view_custom_qr` varchar(1000) NOT NULL DEFAULT '' COMMENT '浏览自定义码集合',
+  `view_goods` varchar(1000) NOT NULL DEFAULT '' COMMENT '浏览商品集合',
+  `view_timeline` varchar(1000) NOT NULL DEFAULT '' COMMENT '浏览商品集合',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `client_id` int(10) NOT NULL,
+  `target_id` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_address`;
+CREATE TABLE `ims_longbing_card_shop_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `sex` varchar(30) NOT NULL,
+  `phone` varchar(30) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `address_detail` varchar(100) NOT NULL,
+  `province` varchar(30) NOT NULL,
+  `city` varchar(30) NOT NULL,
+  `area` varchar(30) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `is_default` int(3) NOT NULL DEFAULT '0',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_collage`;
+CREATE TABLE `ims_longbing_card_shop_collage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(10) NOT NULL,
+  `spe_price_id` int(10) NOT NULL,
+  `number` int(10) NOT NULL,
+  `people` int(10) NOT NULL DEFAULT '2',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_collage_list`;
+CREATE TABLE `ims_longbing_card_shop_collage_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '发起拼团人',
+  `goods_id` int(10) NOT NULL,
+  `collage_id` int(10) NOT NULL COMMENT '拼团条件id',
+  `name` varchar(30) NOT NULL,
+  `cover` varchar(200) NOT NULL,
+  `number` int(10) NOT NULL COMMENT '拼团人数',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
+  `collage_status` int(3) NOT NULL DEFAULT '0' COMMENT '拼团状态 0=>未支付; 1=>拼团中; 2=>拼团人满; 3=>拼团完成; 4=>拼团失败',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `left_number` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--拼团记录列表';
+DROP TABLE IF EXISTS `ims_longbing_card_shop_order`;
+CREATE TABLE `ims_longbing_card_shop_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `address_id` int(10) NOT NULL,
+  `pay_status` int(3) NOT NULL DEFAULT '0' COMMENT '支付状态 0=>未支付; 1=>已支付; 2=>已退款',
+  `order_status` int(3) NOT NULL DEFAULT '0' COMMENT '订单状态 0=>未完成; 1=>已取消 2=>已发货; 3=>已完成; 4=>已评价',
+  `type` int(3) NOT NULL DEFAULT '0' COMMENT '订单类型 0=>普通订单; 1=>拼团订单',
+  `collage_id` int(3) NOT NULL DEFAULT '0' COMMENT '拼团记录id',
+  `freight` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `out_trade_no` varchar(50) NOT NULL DEFAULT '',
+  `courier_number` varchar(50) NOT NULL DEFAULT '' COMMENT '快递单号',
+  `name` varchar(30) NOT NULL,
+  `sex` varchar(30) NOT NULL,
+  `phone` varchar(30) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `address_detail` varchar(100) NOT NULL,
+  `province` varchar(30) NOT NULL,
+  `city` varchar(30) NOT NULL,
+  `area` varchar(30) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `to_uid` int(10) NOT NULL DEFAULT '0',
+  `out_refund_no` varchar(50) NOT NULL DEFAULT '',
+  `express_company` varchar(50) NOT NULL DEFAULT '',
+  `express_phone` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_order_item`;
+CREATE TABLE `ims_longbing_card_shop_order_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(10) NOT NULL,
+  `goods_id` int(10) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `cover` varchar(200) NOT NULL,
+  `spe_price_id` int(10) NOT NULL,
+  `content` varchar(50) NOT NULL,
+  `number` int(10) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_search`;
+CREATE TABLE `ims_longbing_card_shop_search` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `keyword` varchar(30) NOT NULL,
+  `number` int(10) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_spe`;
+CREATE TABLE `ims_longbing_card_shop_spe` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(10) NOT NULL,
+  `title` varchar(20) NOT NULL COMMENT '规格名',
+  `pid` int(10) NOT NULL DEFAULT '0' COMMENT '0=>顶级规格;其他=>上级规格id',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_spe_price`;
+CREATE TABLE `ims_longbing_card_shop_spe_price` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(10) NOT NULL,
+  `spe_id_1` varchar(100) NOT NULL DEFAULT '',
+  `spe_id_2` varchar(100) NOT NULL DEFAULT '',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `stock` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_trolley`;
+CREATE TABLE `ims_longbing_card_shop_trolley` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `cover` varchar(200) NOT NULL,
+  `spe_price_id` int(10) NOT NULL,
+  `content` varchar(50) NOT NULL,
+  `number` int(10) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `freight` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_type`;
+CREATE TABLE `ims_longbing_card_shop_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) NOT NULL COMMENT '分类名',
+  `cover` varchar(200) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0' COMMENT '0=>顶级分类;其他=>上级分类id',
+  `top` int(10) NOT NULL DEFAULT '0' COMMENT '排序值, 倒序',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_shop_user_collage`;
+CREATE TABLE `ims_longbing_card_shop_user_collage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '发起拼团人',
+  `collage_id` int(10) NOT NULL COMMENT '拼团条件id',
+  `collage_status` int(3) NOT NULL DEFAULT '0' COMMENT '拼团状态 0=>未支付; 1=>拼团中; 2=>拼团人满; 3=>拼团完成; 4=>拼团失败',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--用户拼团关系记录列表';
+DROP TABLE IF EXISTS `ims_longbing_card_staffs`;
+CREATE TABLE `ims_longbing_card_staffs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '标题',
+  `cover` varchar(500) NOT NULL DEFAULT '' COMMENT '头像',
+  `job` varchar(20) NOT NULL DEFAULT '0' COMMENT '职位',
+  `experience1` varchar(100) NOT NULL DEFAULT '0' COMMENT '经历1',
+  `experience2` varchar(100) NOT NULL DEFAULT '0' COMMENT '经历2',
+  `experience3` varchar(100) NOT NULL DEFAULT '0' COMMENT '经历3',
+  `top` int(10) NOT NULL DEFAULT '0' COMMENT '排序值',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `modular_id` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ims_longbing_card_tabbar`;
+CREATE TABLE `ims_longbing_card_tabbar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu1_name` varchar(20) NOT NULL DEFAULT '名片',
+  `menu2_name` varchar(20) NOT NULL DEFAULT '商城',
+  `menu3_name` varchar(20) NOT NULL DEFAULT '动态',
+  `menu4_name` varchar(20) NOT NULL DEFAULT '官网',
+  `menu1_is_hide` int(3) NOT NULL DEFAULT '1',
+  `menu2_is_hide` int(3) NOT NULL DEFAULT '1',
+  `menu3_is_hide` int(3) NOT NULL DEFAULT '1',
+  `menu4_is_hide` int(3) NOT NULL DEFAULT '1',
+  `menu1_url` varchar(500) NOT NULL DEFAULT '',
+  `menu2_url` varchar(500) NOT NULL DEFAULT 'longbing_card/pages/index/index?currentTabBar=toShop',
+  `menu3_url` varchar(500) NOT NULL DEFAULT 'longbing_card/pages/index/index?currentTabBar=toNews',
+  `menu4_url` varchar(500) NOT NULL DEFAULT 'longbing_card/pages/index/index?currentTabBar=toCompany',
+  `menu1_url_out` varchar(500) NOT NULL DEFAULT '',
+  `menu2_url_out` varchar(500) NOT NULL DEFAULT '',
+  `menu3_url_out` varchar(500) NOT NULL DEFAULT '',
+  `menu4_url_out` varchar(500) NOT NULL DEFAULT '',
+  `menu1_url_jump_way` int(3) NOT NULL DEFAULT '0',
+  `menu2_url_jump_way` int(3) NOT NULL DEFAULT '0',
+  `menu3_url_jump_way` int(3) NOT NULL DEFAULT '0',
+  `menu4_url_jump_way` int(3) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='名片--底部菜单表';
+DROP TABLE IF EXISTS `ims_longbing_card_timeline`;
+CREATE TABLE `ims_longbing_card_timeline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL COMMENT '标题',
+  `cover` varchar(500) NOT NULL DEFAULT '' COMMENT '封面图',
+  `content` text,
+  `top` int(10) NOT NULL DEFAULT '0' COMMENT '排序值',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(10) NOT NULL DEFAULT '0',
+  `type` int(3) NOT NULL DEFAULT '0',
+  `url_type` int(3) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='名片--公司动态表';
+DROP TABLE IF EXISTS `ims_longbing_card_timeline_comment`;
+CREATE TABLE `ims_longbing_card_timeline_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `timeline_id` int(10) NOT NULL,
+  `content` varchar(1000) NOT NULL DEFAULT '' COMMENT '鍐呭',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--公司动态评论表';
+DROP TABLE IF EXISTS `ims_longbing_card_timeline_thumbs`;
+CREATE TABLE `ims_longbing_card_timeline_thumbs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `timeline_id` int(10) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--公司动态点赞表';
+DROP TABLE IF EXISTS `ims_longbing_card_user`;
+CREATE TABLE `ims_longbing_card_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `openid` varchar(100) NOT NULL DEFAULT '',
+  `nickName` varchar(100) NOT NULL DEFAULT '',
+  `avatarUrl` varchar(300) NOT NULL DEFAULT '',
+  `pid` int(10) NOT NULL DEFAULT '0' COMMENT '上级id',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `is_staff` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否是公司员工  1 是否 0 不是',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `is_qr` int(3) NOT NULL DEFAULT '0',
+  `is_group` int(3) NOT NULL DEFAULT '0',
+  `type` int(3) NOT NULL DEFAULT '0',
+  `target_id` int(10) NOT NULL DEFAULT '0',
+  `scene` int(10) NOT NULL DEFAULT '0',
+  `openGId` varchar(50) NOT NULL DEFAULT '',
+  `qr_path` varchar(200) NOT NULL DEFAULT '',
+  `is_boss` int(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `openid_uniacid` (`openid`,`uniacid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='名片--用户表';
+DROP TABLE IF EXISTS `ims_longbing_card_user_follow`;
+CREATE TABLE `ims_longbing_card_user_follow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `staff_id` int(10) NOT NULL,
+  `content` varchar(200) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `type` int(3) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`staff_id`,`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_user_info`;
+CREATE TABLE `ims_longbing_card_user_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `fans_id` int(11) NOT NULL DEFAULT '0' COMMENT '对应ims_mc_mapping_fans 表id',
+  `is_staff` tinyint(2) NOT NULL DEFAULT '0' COMMENT '是否是公司员工  1 是 0 不是',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '员工名字',
+  `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
+  `job_id` int(11) NOT NULL DEFAULT '0' COMMENT '职位id',
+  `company_id` int(11) NOT NULL DEFAULT '0' COMMENT '公司id',
+  `phone` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
+  `wechat` varchar(50) NOT NULL DEFAULT '' COMMENT '微信',
+  `telephone` varchar(20) NOT NULL DEFAULT '' COMMENT '电话',
+  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `voice` varchar(500) DEFAULT '' COMMENT '语音介绍',
+  `voice_time` int(10) NOT NULL DEFAULT '0' COMMENT '语音长短',
+  `desc` varchar(255) NOT NULL DEFAULT '' COMMENT '个性签名',
+  `images` text,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `is_default` int(3) NOT NULL DEFAULT '0',
+  `top` int(5) NOT NULL DEFAULT '0',
+  `my_url` varchar(300) NOT NULL DEFAULT '',
+  `my_video` varchar(300) NOT NULL DEFAULT '',
+  `card_type` varchar(50) NOT NULL DEFAULT 'cardType1',
+  `my_video_cover` varchar(500) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='名片--员工详情表';
+DROP TABLE IF EXISTS `ims_longbing_card_user_label`;
+CREATE TABLE `ims_longbing_card_user_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户id',
+  `staff_id` int(10) NOT NULL COMMENT '员工id',
+  `lable_id` int(10) NOT NULL COMMENT '标签id',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_user_mark`;
+CREATE TABLE `ims_longbing_card_user_mark` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户转发人的id',
+  `staff_id` int(10) NOT NULL COMMENT '员工id',
+  `mark` int(3) NOT NULL COMMENT '1=>跟进中,2=>已成交',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_user_phone`;
+CREATE TABLE `ims_longbing_card_user_phone` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '发起会话的用户id',
+  `to_uid` int(10) NOT NULL,
+  `phone` varchar(20) NOT NULL COMMENT '手机号',
+  `status` int(3) NOT NULL DEFAULT '1',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='名片--用户授权手机号表';
+DROP TABLE IF EXISTS `ims_longbing_card_value`;
+CREATE TABLE `ims_longbing_card_value` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(10) NOT NULL,
+  `client` int(10) NOT NULL DEFAULT '0',
+  `charm` int(10) NOT NULL DEFAULT '0',
+  `interaction` int(10) NOT NULL DEFAULT '0',
+  `product` int(10) NOT NULL DEFAULT '0',
+  `website` int(10) NOT NULL DEFAULT '0',
+  `active` int(10) NOT NULL DEFAULT '0',
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `ims_longbing_card_video`;
+CREATE TABLE `ims_longbing_card_video` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cover` varchar(500) NOT NULL COMMENT '视频封面图',
+  `title` varchar(500) NOT NULL COMMENT '标题',
+  `video` varchar(500) NOT NULL COMMENT '视频链接',
+  `modular_id` int(5) NOT NULL,
+  `uniacid` int(10) NOT NULL,
+  `status` int(3) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `top` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--官网打电话表';
+DROP TABLE IF EXISTS `ims_longbing_card_view_count`;
+CREATE TABLE `ims_longbing_card_view_count` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `to_uid` int(10) NOT NULL,
+  `type` int(3) NOT NULL COMMENT '浏览内容, 1=>浏览商城列表 2=>浏览商品详情 3=>浏览动态列表 4=>点赞动态 5=>动态留言 6=>浏览公司官网 7=>浏览动态详情',
+  `target` varchar(200) NOT NULL DEFAULT '',
+  `uniacid` int(10) NOT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='名片--用户浏览内容记录表';
+]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[update.php]]></upgrade>
+</manifest>

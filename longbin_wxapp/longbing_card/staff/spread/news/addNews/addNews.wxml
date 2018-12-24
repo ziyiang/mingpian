@@ -1,0 +1,27 @@
+<form bindsubmit="formSubmit" class="{{globalData.isIphoneX?'isIphoneX':''}}" reportSubmit="true">
+    <view class="spread-addNews-sec">
+        <input class="title" name="number" placeholder="请输入群总人数" value="{{paramData.groupNumber}}" wx:if="{{status=='group'}}"></input>
+        <block wx:else>
+            <input class="title" name="title" placeholder="在这里填写您的{{status=='news'?'动态':'推广'}}名称"></input>
+            <textarea maxlength="-1" name="content" placeholder="请填写您的信息内容"></textarea>
+        </block>
+    </view>
+    <view class="spread-addNews-sec" wx:if="{{status=='news'}}">
+        <view class="upLoadImg-sec clearfix" wx:if="{{tempFilePaths.length>0}}">
+            <view class="upload-staff-images rel" wx:for="{{tempFilePaths}}" wx:key="key">
+                <em bindtap="toJump" class="abs" data-index="{{index}}" data-status="toDeleteImg">
+                    <i class="iconfont icon-shanchu"></i>
+                </em>
+                <image class="br-10 fl" mode="aspectFill" src="{{item}}"></image>
+            </view>
+        </view>
+        <view bindtap="chooseImage" class="tc {{tempFilePaths.length<9?'':'hide'}}">
+            <i class="iconfont icon-tupian"></i>
+            <view>添加图片</view>
+        </view>
+    </view>
+    <view class="{{globalData.isIphoneX?'isIphoneX':''}}" style="height:100rpx;"></view>
+    <button class="fix-addNews-btn fix {{globalData.isIphoneX?'isIphoneX':''}}" data-status="toAddNews" formType="submit" hoverClass="none" style="height:auto;">
+        <view class="red-text">确定{{status=='group'?'':'发布'}}</view>
+    </button>
+</form>

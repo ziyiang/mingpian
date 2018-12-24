@@ -1,0 +1,313 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            用户列表
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="div-search-body">
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only"></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputSearch" placeholder="请输入搜索内容" value="{$keyword}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-search">搜索</button>
+            </form>
+
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>用户ID</th>
+                <th>微信昵称</th>
+                <th>微信头像</th>
+                <th>授权手机号</th>
+                <th>加入时间</th>
+                <th>用户类型</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $users $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['nickName']}</td>
+                <td>
+                    <img src="{$item['avatarUrl']}" alt="">
+                </td>
+                <td>{$item['phone']}</td>
+                <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                {if $item['is_boss'] == 1}
+                <td><span class="layui-badge layui-bg-blue">BOSS</span></td>
+                {else}
+                    {if $item['is_staff'] == 1}
+                    <td><span class="layui-badge layui-bg-blue">员工</span></td>
+                    {else}
+                    <td><span class="layui-badge layui-bg-black">普通用户</span></td>
+                    {/if}
+                {/if}
+
+                <td>
+                    {if $item['is_staff'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-del-staff"
+                            staffId="{$item['id']}">
+                        取消名片
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-add-card"
+                            staffId="{$item['id']}">
+                        编辑名片
+                    </button>
+
+
+
+
+
+                    {if $item['is_boss'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-del-boss"
+                            staffId="{$item['id']}">
+                        取消BOSS
+                    </button>
+
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs btn-add-boss"
+                            staffId="{$item['id']}">
+                        设置为BOSS
+                    </button>
+                    {/if}
+
+
+
+
+
+                    {if $item['is_default'] == 1}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-del-default"
+                            cardId="{$item['id']}">
+                        取消推荐
+                    </button>
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-add-default"
+                            cardId="{$item['id']}">
+                        设为推荐
+                    </button>
+                    {/if}
+
+
+
+
+
+                    {else}
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-add-staff"
+                            staffId="{$item['id']}">
+                        设为员工并创建名片
+                    </button>
+                    {/if}
+
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+        <div id="dataTable"></div>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="/addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="/addons/longbing_card/images/css/main.css">
+
+<script src="/addons/longbing_card/images/layui/layui.js"></script>
+<script src="/addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'form', 'laypage'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            ,layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('user')}" + "&page=" + obj.curr + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  添加员工
+    $('.btn-add-staff').click(function () {
+        var id = $(this).attr('staffId');
+        if (!id) {
+            layer.msg('获取用户id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否将该用户添加为员工并创建名片',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'addStaff',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  添加BOSS
+    $('.btn-add-boss').click(function () {
+        var id = $(this).attr('staffId');
+        if (!id) {
+            layer.msg('获取用户id失败!');
+            return false;
+        }
+        layer.open({
+            content: '设置为BOSS?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'addBoss',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  移除BOSS
+    $('.btn-del-boss').click(function () {
+        var id = $(this).attr('staffId');
+        if (!id) {
+            layer.msg('获取用户id失败!');
+            return false;
+        }
+        layer.open({
+            content: '取消BOSS?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'delBoss',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  移除员工
+    $('.btn-del-staff').click(function () {
+        var id = $(this).attr('staffId');
+        if (!id) {
+            layer.msg('获取用户id失败!');
+            return false;
+        }
+        layer.open({
+            content: '移除员工',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'delStaff',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  管理名片
+    $('.btn-add-card').click(function () {
+        layer.load();
+        var id = $(this).attr('staffId');
+        if (!id) {
+            layer.msg('获取用户id失败!');
+            return false;
+        }
+        window.location.href = "{php echo $this->createWebUrl('editCard')}" + "&fanid=" + id;
+        return false;
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('user')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('user')}" + "&keyword=" + keyword;
+        return false;
+    })
+
+
+
+    //  设为推荐员工
+    $('.btn-add-default').click(function () {
+        var id = $(this).attr('cardId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.open({
+            content: '设为推荐员工名片',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'addDefault',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  取消推荐员工
+    $('.btn-del-default').click(function () {
+        var id = $(this).attr('cardId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        layer.open({
+            content: '取消推荐员工名片',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('user')}";
+                var data = {
+                    action: 'delDefault',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+</script>

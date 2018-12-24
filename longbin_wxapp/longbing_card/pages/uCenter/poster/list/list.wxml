@@ -1,0 +1,25 @@
+<block wx:if="{{post_type_list||post_img}}">
+    <view class="collage-scroll-search-sec">
+        <scroll-view class="fl scroll-view-navTop-sec clearfix" scrollIntoView="{{toView}}" scrollWithAnimation="true" scrollX="true" style=" white-space: nowrap; display: flex;">
+            <view bindtap="toJump" class="scroll-item-de" data-categoryid="0" data-status="toTabClickMore" id="scrollNav0">
+                <view class="scroll-item-title {{'100000101'==activeIndex?'scroll-item-active':''}}">全部海报</view>
+                <view class="bottom-split" wx:if="{{'100000101'==activeIndex}}"></view>
+            </view>
+            <view bindtap="toJump" class="scroll-item-de" data-categoryid="{{item.id}}" data-index="{{index}}" data-status="toTabClick" id="scroll{{item.id}}" wx:for="{{post_type_list}}" wx:key="index">
+                <view class="scroll-item-title {{index==activeIndex?'scroll-item-active':''}}">{{item.title}}</view>
+                <view class="bottom-split" wx:if="{{index==activeIndex}}"></view>
+            </view>
+        </scroll-view>
+    </view>
+    <view class="poster-list-sec clearfix">
+        <view bindtap="toJump" class="child fl" data-index="{{item.img}}" data-status="toShare" data-url="/longbing_card/pages/uCenter/poster/share/share" wx:for="{{post_img}}" wx:key="key">
+            <image class="poster-img br-5" src="{{item.img}}"></image>
+            <view class="text">{{item.title}}</view>
+        </view>
+    </view>
+    <view class="page">
+        <view class="loadmore loadmore_line">
+            <view class="loadmore_tips loadmore_tips_in-line">没有找到更多数据</view>
+        </view>
+    </view>
+</block>

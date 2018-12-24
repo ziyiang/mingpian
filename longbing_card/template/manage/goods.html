@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../addons/{$module_name}/images/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../addons/{$module_name}/images/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../../addons/{$module_name}/images/css/main.css" media="all">
+</head>
+<body>
+
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">商品列表</div>
+
+                <div class="layui-card-body">
+
+                    <blockquote style="letter-spacing: 1px" class="layui-elem-quote">请先点击添加商品按钮添加商品, 添加成功之后可在商品列表操作栏中点击规格按钮添加商品的不同规格, 随后可点击拼团按钮根据刚才添加的规格来设置不同的拼团条件, 只有设置了拼团条件的商品才能参与拼团</blockquote>
+
+                    <div class="div-search-body">
+
+                        <a class="layui-btn" href="{$addGoods}&id=0">
+                            <i class="layui-icon">&#xe608;</i> 添加商品
+                        </a>
+
+                        <form class="form-inline">
+                            <div class="form-group" style="display: inline-block;width: 50%">
+                                <label class="sr-only"></label>
+                                <div class="input-group">
+                                    <input type="text" name="title" required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off" class="layui-input" id="inputSearch" value="{$keyword}">
+                                </div>
+                            </div>
+                            <button class="layui-btn layui-btn-normal btn-search" type="button">
+                                搜索
+                            </button>
+                        </form>
+
+                    </div>
+
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>商品名</th>
+                            <th>封面图</th>
+                            <!--<th>小程序码</th>-->
+                            <th>价格</th>
+                            <th>销量</th>
+                            <th>状态</th>
+                            <th>所属分类</th>
+                            <th>创建时间</th>
+                            <th style="width: 260px">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $goods $item}
+                        <tr>
+                            <td>{$item['id']}</td>
+                            <td>{$item['name']}</td>
+                            <td>
+                                <img src="{$item['trueCover']}" alt="">
+                            </td>
+                            <!--<td>-->
+                                <!--<img src="{php echo tomedia($item['qr_path'])}" alt="">-->
+                            <!--</td>-->
+                            <td>{$item['price']}</td>
+                            <td>{$item['sale_count']}</td>
+                            <td>
+                                {if $item['status'] == 1}
+                                <span class="layui-badge layui-bg-blue">上架中</span>
+                                {else}
+                                <span class="layui-badge">已下架</span>
+                                {/if}
+                            </td>
+                            <td>{$item['title']}</td>
+                            <td>{php echo date('Y-m-d H:i:s', $item['create_time'])}</td>
+                            <td>
+                                {if $item['status'] == 1}
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-down-goods"
+                                        itemId="{$item['id']}">
+                                    下架
+                                </button>
+                                {else}
+                                <button type="button" class="layui-btn layui-btn-xs btn-on-goods"
+                                        itemId="{$item['id']}">
+                                    上架
+                                </button>
+                                {/if}
+                                <button type="button" class="layui-btn layui-btn-xs btn-edit-goods"
+                                        itemId="{$item['id']}">
+                                    编辑
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-primary btn-delete-item"
+                                        itemId="{$item['id']}">
+                                    删除
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-edit-spe"
+                                        itemId="{$item['id']}">
+                                    规格
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-warm btn-edit-collage"
+                                        itemId="{$item['id']}">
+                                    拼团
+                                </button>
+                                <!--<button type="button" class="layui-btn layui-btn-xs layui-btn-normal btn-recreate-card"-->
+                                        <!--itemId="{$item['id']}">-->
+                                    <!--生成小程序码-->
+                                <!--</button>-->
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+
+                    <div id="dataTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../addons/{$module_name}/images/layuiadmin/layui/layui.js"></script>
+<script src="../../../addons/{$module_name}/images/js/jquery.min.js"></script>
+<script>
+    var keyword = $('#inputSearch').val();
+    layui.use(['layer', 'laypage'], function () {
+        var layer = layui.layer
+            , laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dataTable' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {$count} //数据总数，从服务端得到
+            , curr: {$curr}
+            , limit: {$perPage} //每页显示的条数
+            ,layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    layer.load();
+                    window.location.href = "{php echo $this->createWebUrl('manage/goods')}" + "&page=" + obj.curr + "&keyword=" + keyword;
+                }
+            }
+        });
+    });
+
+    //  搜索内容
+    $('.btn-search').click(function () {
+        var keyword = $('#inputSearch').val();
+        if (!keyword) {
+            window.location.href = "{php echo $this->createWebUrl('manage/goods')}";
+            return false;
+        }
+        layer.load();
+        window.location.href = "{php echo $this->createWebUrl('manage/goods')}" + "&keyword=" + keyword;
+        return false;
+    });
+
+    //  下架商品
+    $('.btn-down-goods').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否下架该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('manage/goods')}";
+                var data = {
+                    action: 'downGoods',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+    //  上架商品
+    $('.btn-on-goods').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.open({
+            content: '是否上架该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('manage/goods')}";
+                var data = {
+                    action: 'upGoods',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  删除
+    $('.btn-delete-item').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取id失败!');
+            return false;
+        }
+        var url = "{php echo $this->createWebUrl('goods')}" + "&action=delete&id=" + id;
+        layer.open({
+            content: '是否删除该商品?',
+            yes: function (index, layero) {
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.load();
+                var url = "{php echo $this->createWebUrl('manage/goods')}";
+                var data = {
+                    action: 'delete',
+                    id: id
+                };
+
+                postData(url, data);
+            }
+        });
+    });
+
+    //  新增商品
+    $('.btn-add-goods').click(function () {
+        layer.load();
+        var url = "{php echo $this->createWebUrl('editGoods')}";
+        window.location.href = url;
+    });
+
+    //  编辑商品
+    $('.btn-edit-goods').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('manage/goodsEdit')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+    //  编辑商品规格
+    $('.btn-edit-spe').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('manage/speEdit')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+    //  编辑商品平团条件
+    $('.btn-edit-collage').click(function () {
+        var id = $(this).attr('itemId');
+        if (!id) {
+            layer.msg('获取商品id失败!');
+            return false;
+        }
+        layer.load();
+        var url = "{php echo $this->createWebUrl('manage/collage')}" + "&id=" +id;
+        window.location.href = url;
+    });
+
+    // //  重新生成名片码
+    // $('.btn-recreate-card').click(function () {
+    //     var id = $(this).attr('itemId');
+    //     if (!id) {
+    //         layer.msg('获取id失败!');
+    //         return false;
+    //     }
+    //     layer.open({
+    //         content: '是否重新生成小程序码',
+    //         yes: function (index, layero) {
+    //             layer.close(index); //如果设定了yes回调，需进行手工关闭
+    //             layer.load();
+    //             var url = "{php echo $this->createWebUrl('manage/goods')}";
+    //             var data = {
+    //                 action: 'recreate',
+    //                 id: id
+    //             };
+    //
+    //             postData(url, data);
+    //         }
+    //     });
+    // });
+</script>
+<script src="../../../addons/{$module_name}/images/js/main.js"></script>
+</body>
+</html>

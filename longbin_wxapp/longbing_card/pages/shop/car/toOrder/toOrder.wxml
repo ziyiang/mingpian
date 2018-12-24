@@ -1,0 +1,39 @@
+<view bindtap="toJump" class="order-detail-address rel toOrder-address" data-status="toCheckAddress" data-url="/longbing_card/pages/uCenter/address/addressList/addressList">
+    <i class="iconfont icon-map abs"></i>
+    <em class="iconfont icon-right abs"></em>
+    <block wx:if="{{checkAddress_cur.address}}">
+        <view class="address ellipsis">{{checkAddress_cur.address}}{{checkAddress_cur.address_detail}}</view>
+        <view class="name ellipsis">{{checkAddress_cur.name}}<text>{{checkAddress_cur.sex}}</text>{{checkAddress_cur.phone}}</view>
+    </block>
+    <view class="no-address ellipsis" wx:else>暂无默认地址，去选择地址</view>
+</view>
+<view class="order-detail-list toOrder-order-list">
+    <view class="order-list" style="margin-bottom:0rpx;">
+        <view bindtap="toJump" class="order-list-child rel" data-status="toProductDetail" data-url="/longbing_card/pages/shop/detail/detail?id={{item.goods_id}}" wx:for="{{paramData.orderData.dataList}}" wx:key="key">
+            <image class="abs br-5" src="{{item.cover_true}}"></image>
+            <view class="flex title">
+                <view class="flex100-7 ellipsis">{{item.name}}</view>
+                <view class="flex100-3 ellipsis tr">X{{item.number}}</view>
+            </view>
+            <view class="flex-spec ellipsis">{{item.spe?'规格：':''}}{{item.spe}}</view>
+            <view class="flex-spec ellipsis">¥{{item.price2}}/件</view>
+        </view>
+    </view>
+</view>
+<view class="list-count-money">
+    <view class="flex">
+        <view class="flex100-5">商品金额</view>
+        <view class="flex100-5 tr">￥{{paramData.orderData.count_price}}</view>
+    </view>
+    <view class="flex">
+        <view class="flex100-5">运费</view>
+        <view class="flex100-5 tr">￥{{paramData.orderData.freight_price}}</view>
+    </view>
+    <view class="flex">
+        <view class="flex100-5">订单总计</view>
+        <view class="flex100-5 tr">￥{{paramData.orderData.countPayMoney}}</view>
+    </view>
+</view>
+<view style="height:120rpx;"></view>
+<view bindtap="toJump" class="add-address-fixed fix tc {{globalData.isIphoneX?'isIphoneX':''}}" data-status="toWxPay" style="height:auto;">微信支付　¥{{paramData.orderData.countPayMoney}}</view>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}"></view>

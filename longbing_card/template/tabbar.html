@@ -1,0 +1,223 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            公司信息管理
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form class="layui-form" action="" onsubmit="return false">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">底部菜单1文字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu1_name" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu1_name']}">
+                </div>
+            </div>
+
+            <hr class="layui-bg-green">
+
+            <div class="layui-form-item" style="margin-top: 50px">
+                <label class="layui-form-label">底部菜单2文字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu2_name" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu2_name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示底部菜单2</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu2_is_hide'] == 1 }
+                    <input type="radio" name="menu2_is_hide" value="0" title="不显示">
+                    <input type="radio" name="menu2_is_hide" value="1" title="显示" checked>
+                    {else}
+                    <input type="radio" name="menu2_is_hide" value="0" title="不显示" checked>
+                    <input type="radio" name="menu2_is_hide" value="1" title="显示">
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="">
+                <label class="layui-form-label">底部菜单2跳转外部链接或小程序appid</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu2_url_out" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu2_url_out']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">底部菜单2跳转方式</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu2_url_jump_way'] == 1 }
+                    <input type="radio" name="menu2_url_jump_way" value="0" title="外部链接">
+                    <input type="radio" name="menu2_url_jump_way" value="1" title="小程序" checked>
+                    {else}
+                    <input type="radio" name="menu2_url_jump_way" value="0" title="外部链接" checked>
+                    <input type="radio" name="menu2_url_jump_way" value="1" title="小程序">
+                    {/if}
+                    <!--<div class="alert alert-success" role="alert">填写了外部链接或小程序appid后, 小程序内跳转路径无效</div>-->
+                </div>
+            </div>
+
+            <hr class="layui-bg-orange">
+
+            <div class="layui-form-item" style="margin-top: 50px">
+                <label class="layui-form-label">底部菜单3文字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu3_name" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu3_name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示底部菜单3</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu3_is_hide'] == 1 }
+                    <input type="radio" name="menu3_is_hide" value="0" title="不显示">
+                    <input type="radio" name="menu3_is_hide" value="1" title="显示" checked>
+                    {else}
+                    <input type="radio" name="menu3_is_hide" value="0" title="不显示" checked>
+                    <input type="radio" name="menu3_is_hide" value="1" title="显示">
+                    {/if}
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">请选择底部菜单3跳转路径</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select name="menu3_url" lay-verify="required" lay-search>-->
+                        <!--{loop $pages $item}-->
+                        <!--{if $item['page'] == $tabBar['menu3_url']}-->
+                        <!--<option value="{$item['page']}" selected>{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{else}-->
+                        <!--<option value="{$item['page']}">{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{/if}-->
+                        <!--{/loop}-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="layui-form-item" style="">
+                <label class="layui-form-label">底部菜单3跳转外部链接或小程序appid</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu3_url_out" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu3_url_out']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">底部菜单3跳转方式</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu3_url_jump_way'] == 1 }
+                    <input type="radio" name="menu3_url_jump_way" value="0" title="外部链接">
+                    <input type="radio" name="menu3_url_jump_way" value="1" title="小程序" checked>
+                    {else}
+                    <input type="radio" name="menu3_url_jump_way" value="0" title="外部链接" checked>
+                    <input type="radio" name="menu3_url_jump_way" value="1" title="小程序">
+                    {/if}
+                    <!--<div class="alert alert-success" role="alert">填写了外部链接或小程序appid后, 小程序内跳转路径无效</div>-->
+                </div>
+            </div>
+
+            <hr class="layui-bg-red">
+
+            <div class="layui-form-item" style="margin-top: 50px">
+                <label class="layui-form-label">底部菜单4文字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu4_name" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu4_name']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否显示底部菜单4</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu4_is_hide'] == 1 }
+                    <input type="radio" name="menu4_is_hide" value="0" title="不显示">
+                    <input type="radio" name="menu4_is_hide" value="1" title="显示" checked>
+                    {else}
+                    <input type="radio" name="menu4_is_hide" value="0" title="不显示" checked>
+                    <input type="radio" name="menu4_is_hide" value="1" title="显示">
+                    {/if}
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">请选择底部菜单4跳转路径</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select name="menu4_url" lay-verify="required" lay-search>-->
+                        <!--{loop $pages $item}-->
+                        <!--{if $item['page'] == $tabBar['menu4_url']}-->
+                        <!--<option value="{$item['page']}" selected>{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{else}-->
+                        <!--<option value="{$item['page']}">{$item['title']} &#45;&#45; {$item['page']}</option>-->
+                        <!--{/if}-->
+                        <!--{/loop}-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="layui-form-item" style="">
+                <label class="layui-form-label">底部菜单4跳转外部链接或小程序appid</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menu4_url_out" placeholder="请输入" autocomplete="off" class="layui-input" value="{$tabBar['menu4_url_out']}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">底部菜单4跳转方式</label>
+                <div class="layui-input-block">
+                    {if $tabBar['menu4_url_jump_way'] == 1 }
+                    <input type="radio" name="menu4_url_jump_way" value="0" title="外部链接">
+                    <input type="radio" name="menu4_url_jump_way" value="1" title="小程序" checked>
+                    {else}
+                    <input type="radio" name="menu4_url_jump_way" value="0" title="外部链接" checked>
+                    <input type="radio" name="menu4_url_jump_way" value="1" title="小程序">
+                    {/if}
+                    <!--<div class="alert alert-success" role="alert">填写了外部链接或小程序appid后, 小程序内跳转路径无效</div>-->
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formCompany">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{template 'common/footer'}
+<link rel="stylesheet" href="../../../addons/longbing_card/images/layui/css/layui.css">
+<link rel="stylesheet" href="../../../addons/longbing_card/images/css/main.css">
+
+<script src="../../../addons/longbing_card/images/layui/layui.js"></script>
+<script src="../../../addons/longbing_card/images/js/main.js"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , form = layui.form
+
+        form.on('submit(formCompany)', function(data){
+            var formData = data.field;
+
+            var url = "{php echo $this->createWebUrl('tabbar')}";
+            var id = '{$id}';
+            if (!id)
+            {
+                return false;
+            }
+            var data = {
+                action: 'edit',
+                id: id,
+                formData: formData
+            };
+
+            postData(url, data);
+
+            return false;
+        });
+    });
+
+</script>

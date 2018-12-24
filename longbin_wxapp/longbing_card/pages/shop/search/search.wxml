@@ -1,0 +1,20 @@
+<import src="../../../templates/copyright/copyright.wxml"></import>
+<view class="search-sec fix">
+    <input bindconfirm="toSearchBtn" bindinput="bindinput" class="fl" placeholder="请输入关键词" type="text"></input>
+    <view bindtap="toJump" class="fl tr" data-status="toSearchKeyWord" data-url="/longbing_card/pages/shop/list/list?keyword={{keyword}}">搜索</view>
+</view>
+<view style="height:95rpx;"></view>
+<view class="search-history-hot-sec">
+    <view class="title">搜索历史</view>
+    <view class="history-content clearfix">
+        <view bindtap="toJump" class="child fl tc ellipsis" data-status="toSearch" data-url="/longbing_card/pages/shop/list/list?keyword={{item.keyword}}" wx:for="{{Record.record}}" wx:key="key">{{item.keyword}}</view>
+    </view>
+</view>
+<view class="search-history-hot-sec">
+    <view class="title">热门搜索</view>
+    <view class="hot-content">
+        <view bindtap="toJump" class="flex100-5 ellipsis" data-status="toSearch" data-url="/longbing_card/pages/shop/list/list?keyword={{item.keyword}}" wx:for="{{Record.hot}}" wx:key="key">
+            <em class="tc mr-10 br-5">{{index+1}}</em>{{item.keyword}}</view>
+    </view>
+</view>
+<view class="{{globalData.isIphoneX?'isIphoneX':''}}"></view>

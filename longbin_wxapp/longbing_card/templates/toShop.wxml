@@ -1,0 +1,74 @@
+<view style="width:100%;height:auto;display:block;background:#f4f4f8;">
+    <image class="shop-banner-sec" mode="aspectFill" src="{{shop_company.desc}}" style="width:100%;height:400rpx;"></image>
+    <view class="shop-company-approve rel" style="background:#fcfcfd;">
+        <view class="content abs br-10 flex">
+            <view class="flex100-25">
+                <image class="circle" mode="aspectFill" src="{{shop_company.logo}}"></image>
+            </view>
+            <view class="flex100-75">
+                <view class="name clamp2">
+          {{shop_company.name}}商城
+        </view>
+                <view class="approve">
+                    <i class="iconfont icon-approve"></i>
+          认证企业
+        </view>
+            </view>
+        </view>
+    </view>
+    <view class="mini-share-sec flex fix {{toShopScrollTop==true?'':'hide'}}">
+        <view class="flex100-5 ellipsis" style="flex:0 0 65%;">
+      {{shop_company.name}}
+    </view>
+        <view class="flex100-5 tr" style="flex:0 0 35%;">
+            <button class="circle tc" openType="share" style="padding:0rpx;">
+                <i class="iconfont icon-fenxiang"></i>
+            </button>
+            <view bindtap="toJump" class="circle tc" data-status="toMine" data-url="/longbing_card/pages/uCenter/index">
+                <i class="iconfont icon-yuangong"></i>
+            </view>
+            <view bindtap="toJump" class="circle tc" data-status="toCarIndex" data-url="/longbing_card/pages/shop/car/carIndex/carIndex">
+                <i class="iconfont icon-gouwuche"></i>
+            </view>
+        </view>
+    </view>
+    <view class="collage-scroll-search-sec {{toShopScrollTop==true?'fix':''}}" style="background:#fcfcfd;padding:10rpx 0rpx;{{toShopScrollTop==true?'top:82rpx;':''}}">
+        <scroll-view class="fl scroll-view-navTop-sec" scrollIntoView="{{scrollNav}}" scrollWithAnimation="true" scrollX="true" style="white-space: nowrap; display: flex;width:82%;">
+            <view bindtap="toJump" class="scroll-item-de" data-categoryid="0" data-status="toTabClickMore" id="scrollNavAll">
+                <view class="scroll-item-title {{'100000101'==activeIndex?'scroll-item-active':''}}">
+          全部商品
+        </view>
+                <view class="bottom-split" wx:if="{{'100000101'==activeIndex}}"></view>
+            </view>
+            <view bindtap="toJump" class="scroll-item-de" data-categoryid="{{item.id}}" data-index="{{index}}" data-status="toTabClick" id="scrollNav{{item.id}}" wx:for="{{shop_type}}" wx:key="index">
+                <view class="scroll-item-title {{index==activeIndex?'scroll-item-active':''}}">
+            {{item.title}}
+          </view>
+                <view class="bottom-split" wx:if="{{index==activeIndex}}"></view>
+            </view>
+            <view class="clear"></view>
+        </scroll-view>
+        <view bindtap="toJump" class="search tc fr" data-status="toShowMore" data-url="/longbing_card/pages/shop/navList/navList?to_uid={{paramData.to_uid}}" style="margin-top:20rpx;">
+            <i class="iconfont icon-gengduo-2" style="font-size:40rpx;"></i>
+        </view>
+    </view>
+    <view class="shop-product-sec clearfix">
+        <view bindtap="toJump" class="child br-10 rel" data-index="{{index}}" data-status="toShopDetail" wx:for="{{shop_all.list}}" wx:key="key">
+            <em class="abs tag" wx:if="{{item.is_collage==1}}">拼团商品</em>
+            <image mode="aspectFill" src="{{item.trueCover}}"></image>
+            <view class="clamp2">{{item.name}}</view>
+            <view class="price">¥{{item.price==0?'面议':item.price}}</view>
+        </view>
+    </view>
+    <view class="fixed-right-sec fixed-shop-right-sec fix">
+        <view bindtap="toJump" class="circle tc" data-status="toCarIndex" data-url="/longbing_card/pages/shop/car/carIndex/carIndex">
+            <i class="iconfont icon-gouwuche"></i>
+        </view>
+        <view bindtap="toJump" class="circle tc" data-status="toMine" data-url="/longbing_card/pages/uCenter/index">
+            <i class="iconfont icon-yuangong"></i>
+        </view>
+        <button class="circle tc" openType="share">
+            <i class="iconfont icon-fenxiang"></i>
+        </button>
+    </view>
+</view>
