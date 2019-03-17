@@ -2,7 +2,7 @@
 <template is="{{staffInfo.card_type?staffInfo.card_type:'cardType1'}}" data="{{tmpCardData:tmpCardData}}" wx:if="{{staffInfo}}"></template>
 <view class="card-scroll-title">名片样式</view>
 <scroll-view class="card-scroll-sec clearfix" scrollIntoView="{{toScroll}}" scrollWithAnimation="true" scrollX="true" style="white-space: nowrap; display: flex;">
-    <view bindtap="toJump" class="card-img br-5 {{index==0?'miniImg1':''}} {{index==cardTypeIndex?'active':''}}" data-index="{{index}}" data-status="toCardType" id="toScroll{{index+1}}" wx:for="{{cardTypeImgList}}" wx:key="key">
+    <view bindtap="toJump" class="card-img br-5 active" data-index="{{index}}" data-status="toCardType" id="toScroll{{index+1}}" wx:for="{{cardTypeImgList}}" wx:key="key">
         <image src="{{item}}"></image>
     </view>
 </scroll-view>

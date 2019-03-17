@@ -11,19 +11,21 @@
         </view>
     </view>
     <form bindsubmit="formSubmit" class="copany-nav-sec tc clearfix" reportSubmit="true">
-        <button class="fl" formType="submit" hoverClass="none" openType="share">
+        <!--
+        <button class="fl userinfo" formType="submit" hoverClass="none" openType="share">
             <i class="iconfont icon-zhuanfa" style="color:#21bf34;"></i>
             <view class="title">发名片</view>
         </button>
-        <button class="fl" data-status="toCardIndex" formType="submit" hoverClass="none">
+        -->
+        <button class="fl userinfo" data-status="toCardIndex" formType="submit" hoverClass="none">
             <i class="iconfont icon-chakan" style="color:#feba29;"></i>
             <view class="title">名片预览</view>
         </button>
-        <button class="fl" data-status="toEwm" formType="submit" hoverClass="none">
+        <button class="fl userinfo" data-status="toEwm" formType="submit" hoverClass="none">
             <i class="iconfont icon-mingpian2" style="color:#67afea;"></i>
             <view class="title">名片码</view>
         </button>
-        <button class="fl" data-status="toPoster" data-url="/longbing_card/pages/uCenter/poster/list/list" formType="submit" hoverClass="none">
+        <button class="fl userinfo" data-status="toPoster" data-url="/longbing_card/pages/uCenter/poster/list/list" formType="submit" hoverClass="none">
             <i class="iconfont icon-tupian1" style="color:#fe9987;"></i>
             <view class="title">励志海报</view>
         </button>

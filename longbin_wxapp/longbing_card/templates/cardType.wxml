@@ -19,13 +19,13 @@
     </view>
 </template>
 <template name="cardType2">
-    <view style="background:white;padding:15rpx 0rpx;">
+    <view style="background:white;padding:80rpx 0rpx;">
         <view class="card-index-sec-2 br-10 rel">
             <image class="abs card-bg" mode="widthFix" src="http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/GTAVz7BVzjGyQb3ugnp832q08BQVii.png"></image>
             <image class="abs user-img" mode="aspectFill" src="{{tmpCardData.avatar?tmpCardData.avatar:tmpCardData.default}}"></image>
             <view class="abs user-info-sec">
                 <image class="abs company-logo" mode="scaleToFill" src="{{tmpCardData.logo?tmpCardData.logo:tmpCardData.default}}"></image>
-                <view class="company-name ellipsis">{{tmpCardData.company_short_name?tmpCardData.company_short_name:'暂未填写'}}</view>
+                <view class="company-name ellipsis">{{tmpCardData.company_name?tmpCardData.company_name:'暂未填写'}}</view>
                 <view class="user-name ellipsis"> {{tmpCardData.name?tmpCardData.name:'暂未填写'}}</view>
                 <view class="job-name ellipsis"> {{tmpCardData.job_name?tmpCardData.job_name:'暂未填写'}}</view>
                 <view class="contact-info">
@@ -45,22 +45,32 @@
     </view>
 </template>
 <template name="cardType1">
-    <view style="background:white;padding:15rpx 0rpx;">
-        <view class="card-index-sec br-10">
-            <image mode="aspectFill" src="{{tmpCardData.avatar?tmpCardData.avatar:tmpCardData.default}}"></image>
-            <view class="user-card-info rel">
-                <image class="circle-img abs" src="/longbing_card/resource/images/circle.png"></image>
-                <image class="circle abs" mode="aspectFill" src="{{tmpCardData.logo?tmpCardData.logo:tmpCardData.default}}"></image>
-                <view class="tc name ellipsis">
-                    {{tmpCardData.name?tmpCardData.name:'暂未填写'}}
+
+        <view class="detail card br-15 clearfix">
+            <view class="content fl rel">
+                <view class="company ellipsis">
+                       {{tmpCardData.company_name?tmpCardData.company_name:'暂未填写'}}
                 </view>
-                <view class="tc ellipsis">
-                    {{tmpCardData.job_name?tmpCardData.job_name:'暂未填写'}}
+                <view class="name ellipsis">
+                        {{tmpCardData.name?tmpCardData.name:'暂未填写'}}
                 </view>
-                <view class="tc ellipsis">
-                    {{tmpCardData.company_name?tmpCardData.company_name:'暂未填写'}}
+                <view class="job ellipsis">
+                        {{tmpCardData.job_name?tmpCardData.job_name:'暂未填写'}}
+                </view>
+                <view class="contact ellipsis">
+                        {{tmpCardData.phone?tmpCardData.phone:'暂未填写'}}
+                </view>
+                <view class="contact ellipsis">
+                        {{tmpCardData.email?tmpCardData.email:'暂未填写'}}
                 </view>
             </view>
+            <view class="user-img fr rel">
+                <image class="br-13 fr" mode="aspectFill" src="{{tmpCardData.avatar?tmpCardData.avatar:tmpCardData.default}}"></image>
+                <em class="tc {{tmpCardData.message>100?'dotbig':'dot'}}" wx:if="{{tmpCardData.message>0}}">
+                        {{tmpCardData.message}}
+                    </em>
+            </view>
         </view>
-    </view>
+
+
 </template>

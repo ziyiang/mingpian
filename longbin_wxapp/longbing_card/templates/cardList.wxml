@@ -11,11 +11,15 @@
     <view style="height:86rpx;" wx:if="{{collectionList.list.length>0}}"></view>
 </block>
 <view class="card-list-sec" wx:if="{{collectionList.list.length>0}}">
-    <view bindtap="toJump" class="child rel" data-index="{{index}}" data-status="toCardIndex" wx:for="{{collectionList.list}}" wx:key="key">
+    <view bindtap="toJump" class=" card-list-sec child rel" data-index="{{index}}" data-status="toCardIndex" wx:for="{{collectionList.list}}" wx:key="key">
         <view class="title">
                 {{item.create_time2}}
                 <block wx:if="{{item.shareBy}}">来自{{item.shareBy}}</block>
         </view>
+        <view class="child">
+
+        </view>
+
         <view class="card br-15 clearfix">
             <view class="content fl rel">
                 <view class="company ellipsis">

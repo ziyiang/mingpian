@@ -68,3 +68,86 @@ view,button {
     height: 80rpx;
     line-height: 80rpx;
 }
+
+
+
+
+
+
+
+
+
+
+.card-list-sec .child {
+    width: 680rpx;
+    height: auto;
+    display: block;
+    margin: 0rpx auto;
+}
+
+.detail.card {
+    width: 568rpx;
+    height: 300rpx;
+    padding: 50rpx 56rpx;
+    background: white;
+    color: #848791;
+    overflow: hidden;
+    margin:0 auto;
+    margin-top:120rpx;
+    margin-bottom:70rpx;
+}
+
+.detail.card .content::after {
+    content: '';
+    position: absolute;
+    top: -50rpx;
+    left: -56rpx;
+    width: 10rpx;
+    height: 400rpx;
+    background: #3cb3f5;
+}
+
+.detail.card .content {
+    width: 70%;
+}
+
+.detail.card .content .company, .detail.card .content .desc {
+    font-size: 28rpx;
+}
+
+.detail.card .content .name {
+    font-size: 44rpx;
+    color: #616161;
+    margin-top: 40rpx;
+}
+
+.detail.card .content .company,.detail.card .content .job,.detail.card .content .contact {
+    font-size: 24rpx;
+    line-height: 36rpx;
+}
+
+.detail.card .content .job {
+    color: #616161;
+    margin: 0rpx 0rpx 28rpx 0rpx;
+}
+
+.detail.card .content .desc {
+    color: #3cb3f5;
+    margin-top: 10rpx;
+}
+
+.detail.card .user-img {
+    width: 30%;
+}
+
+.detail.card .user-img image {
+    width: 120rpx;
+    height: 120rpx;
+    display: block;
+}
+
+
+
+
+
+

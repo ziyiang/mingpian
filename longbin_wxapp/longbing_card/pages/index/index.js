@@ -53,7 +53,7 @@ Page({
             form_id: "",
             to_uid: ""
         },
-        moreStatus: 1,
+        moreStatus: 2,
         playPushStatus: 1,
         showShareStatus: 0,
         cardZanType: "",
@@ -289,12 +289,14 @@ Page({
             var e = t.data.cardIndexData;
             a.from;
             var o = e.info.myCompany.name;
-            return e.info.myCompany.short_name && (o = e.info.myCompany.short_name), o = o + "的" + e.info.job_name + e.info.name, 
-            console.log("card分享事件1  that.getShareRecord();"), t.getShareRecord(), t.data.paramData.to_uid != wx.getStorageSync("userid") && t.getForwardRecord(1, 0), 
+            console.log("=====");
+            console.log(o);
+            return e.info.myCompany.short_name && (o = e.info.myCompany.short_name), o = o + "的" + e.info.job_name + e.info.name,
+            console.log("card分享事件1  that.getShareRecord();"), t.getShareRecord(), t.data.paramData.to_uid != wx.getStorageSync("userid") && t.getForwardRecord(1, 0),
             console.log("card分享事件2 that.getShareRecord();"), {
                 title: "您好，我是" + o + "，请惠存。",
                 path: "/longbing_card/pages/index/index?to_uid=" + app.globalData.to_uid + "&from_id=" + wx.getStorageSync("userid") + "&currentTabBar=toCard",
-                imageUrl: e.info.avatar
+                // imageUrl: e.info.avatar
             };
         }
         if ("toShop" == t.data.currentTabBar) return a.from, {

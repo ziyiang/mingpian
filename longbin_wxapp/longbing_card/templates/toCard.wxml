@@ -1,4 +1,4 @@
-<view style="width:100%;height:auto;display:block;background:white;">
+<view style="width:100%;height:auto;display:block;background:white;margin-top:30rpx">
     <block wx:if="{{cardIndexData.info}}">
         <form bindsubmit="formSubmit" reportSubmit="true">
             <button class="card-more-btn tc" data-content="{{moreStatus}}" data-status="toCardMore" formType="submit" hoverClass="none">

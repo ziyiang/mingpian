@@ -448,10 +448,10 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
 }
 
 .card-index-sec-2 .user-img {
-    width: 312rpx;
-    height: 389rpx;
-    top: 0rpx;
-    right: 0rpx;
+    width: 120rpx;
+    height: 120rpx;
+    top: 20rpx;
+    right: 20rpx;
     z-index: 0;
 }
 
@@ -498,6 +498,8 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
     font-size: 22rpx;
     color: #444444;
     margin: 10rpx 0rpx 0rpx 48rpx;
+    width:1000rpx;
+    white-space:pre-line;
 }
 
 .card-index-sec-2 .user-info-sec .contact-info em {
@@ -2276,10 +2278,17 @@ swiper {
     background: white;
 }
 
+.copany-nav-sec .fl.userinfo {
+    padding: 15rpx 0rpx;
+    width: 33%;
+}
+
 .copany-nav-sec .fl {
     padding: 15rpx 0rpx;
     width: 25%;
 }
+
+
 
 .copany-nav-sec .fl image {
     width: 70rpx;

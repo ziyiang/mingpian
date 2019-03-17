@@ -4,6 +4,6 @@ module.exports = {
     acid: "13",
     multiid: "0",
     version: "1.1",
-    siteroot: "https://zulin.ccangli.com/app/index.php",
+    siteroot: "https://mall-ssl.ccangli.com/app/index.php",
     design_method: "1.1"
 };

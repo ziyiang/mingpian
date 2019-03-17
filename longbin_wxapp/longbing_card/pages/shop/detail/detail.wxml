@@ -164,7 +164,7 @@
             <view class="pay-rules" wx:for="{{detailData.spe_list}}" wx:key="key">
                 <view class="title">{{item.title}}</view>
                 <view class="spec-sec">
-                    <view bindtap="toJump" class="fl br-5 {{checkSpeList[index]==index1?'active':''}} " data-id="{{item1.id}}" data-index="{{index}}" data-index1="{{index1}}" data-status="toCheckCur" wx:for="{{item.sec}}" wx:for-index="index1" wx:for-item="item1" wx:key="key1">
+                    <view bindtap="toJump" class="fl br-5 {{checkSpeList[index]==index1?'active':''}} " data-id="{{item1.id}}" data-index="{{index}}" data-index="{{index1}}" data-status="toCheckCur" wx:for="{{item.sec}}" wx:for-index="index1" wx:for-item="item1" wx:key="key1">
                 {{item1.title}}
               </view>
                 </view>

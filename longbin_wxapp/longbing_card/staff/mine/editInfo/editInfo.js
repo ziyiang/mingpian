@@ -2,8 +2,8 @@ var app = getApp(), recorderManager = wx.getRecorderManager(), innerAudioContext
 
 Page({
     data: {
-        cardTypeImgList: [ "http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/Yg7rq8Y1CBi2S1R7s2c22TEcqrshCT.png", "http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/nR22ZLhs8lQoX77DQX1fJ97fc7Ryzl.png" ],
-        cardTypeList: [ "cardType1", "cardType2" ],
+        cardTypeImgList: [ "http://pb14gmv45.bkt.clouddn.com/images/12/2018/11/nR22ZLhs8lQoX77DQX1fJ97fc7Ryzl.png" ],
+        cardTypeList: [ "cardType2" ],
         cardTypeIndex: 0,
         job: -1,
         company: -1,
@@ -132,6 +132,7 @@ Page({
                     c.avatar && (t.avatar = c.avatar, s = c.avatarImg, t.card_type = c.cardtype);
                     var r = d.data.globalData.configInfo.my_company;
                     r || (r = d.data.globalData.configInfo.company_list[0]), t.card_type || (t.card_type = "cardType1");
+                    t.card_type="cardType2";
                     var i = {
                         logo: r.logo,
                         company_name: r.name,
